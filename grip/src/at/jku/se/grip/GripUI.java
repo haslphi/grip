@@ -60,7 +60,7 @@ public class GripUI extends UI {
 			layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
 		});
 		
-		Button changeButton = new Button("Change Me");
+		//Button changeButton = new Button("Change Me");
 		//changeButton.addClickListener(e -> mycomponent.setValue("second"));
 		
 		layout.addComponent(name);
