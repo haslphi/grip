@@ -6,11 +6,9 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 
 import at.jku.se.grip.ui.ApplicationView;
-import at.jku.se.grip.ui.view.LoginScreen;
 
 @SuppressWarnings("serial")
 @Theme("grip")

@@ -1,24 +1,30 @@
 package at.jku.se.grip.ui.navigator;
 
-import org.vaadin.viritin.button.MButton;
-import org.vaadin.viritin.layouts.MHorizontalLayout;
-import org.vaadin.viritin.layouts.MVerticalLayout;
-
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class NavigatorView extends MVerticalLayout {
+public class NavigatorView extends CustomComponent {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3516870999995791498L;
 	
-	private MHorizontalLayout logoHorizontalLayout = null;
-	private MVerticalLayout buttonVerticalLayout = null;
-	private MVerticalLayout btnSpacerVerticalLayout = null;
-	private MButton overviewButton = null;
+	public static final String ID = "dashboard-menu";
+	private static final String BUTTON_WIDTH = "180px";
+	
+	private VerticalLayout menuVerticalLayout = null;
+	private HorizontalLayout logoWrapperHorizontalLayout = null;
+	private Button overviewButton = null;
+	private Button usersButton = null;
+	private Button signOutButton = null;
 	
 	public NavigatorView() {
 		super();
@@ -26,51 +32,97 @@ public class NavigatorView extends MVerticalLayout {
 	}
 	
 	private void init() {
-		this.setStyleName("sidebar");
-		this.setStyleName(ValoTheme.MENU_PART);
-		this.withFullHeight().withMargin(false).withSpacing(false);
-		this.setDefaultComponentAlignment(Alignment.TOP_CENTER);
-		this.addComponent(getLogoHorizontalLayout());
-		this.addComponent(getButtonVerticalLayout());
+		this.addStyleName(ValoTheme.MENU_ROOT);
+		this.setSizeUndefined();
+		this.setId(ID);
+		this.setSizeUndefined();
+		this.setCompositionRoot(getMenuVerticalLayout());
 	}
 	
-	public MHorizontalLayout getLogoHorizontalLayout() {
+	public VerticalLayout getMenuVerticalLayout() {
+		if(menuVerticalLayout == null) {
+			menuVerticalLayout = new VerticalLayout();
+			menuVerticalLayout.addStyleName(ValoTheme.MENU_PART);
+			menuVerticalLayout.addStyleName("no-vertical-drag-hints");
+			menuVerticalLayout.addStyleName("no-horizontal-drag-hints");
+			menuVerticalLayout.setWidth(null);
+			menuVerticalLayout.setHeight("100%");
+			menuVerticalLayout.setSpacing(true);
+
+			menuVerticalLayout.addComponent(getLogoWrapperHorizontalLayout());
+			menuVerticalLayout.addComponent(getOverviewButton());
+	        menuVerticalLayout.addComponent(getUsersButton());
+	        menuVerticalLayout.addComponent(getSignOutButton());
+		}
+		return menuVerticalLayout;
+	}
+	
+	/*public MHorizontalLayout getLogoHorizontalLayout() {
 		if(logoHorizontalLayout == null) {
 			logoHorizontalLayout = new MHorizontalLayout();
-			logoHorizontalLayout.setIcon(FontAwesome.TRANSGENDER);
+			logoHorizontalLayout.withStyleName(ValoTheme.MENU_PART);
 			logoHorizontalLayout.withStyleName(ValoTheme.MENU_PART_LARGE_ICONS);
-			logoHorizontalLayout.withStyleName("navigator-logo").withFullWidth().withHeight("50px");
+			logoHorizontalLayout.withFullWidth();
+
+			Label logo = new Label(FontAwesome.USER.getHtml(), ContentMode.HTML);
+			logo.setSizeUndefined();
+			logo.setPrimaryStyleName(ValoTheme.MENU_LOGO);
+
+			logoHorizontalLayout.addComponent(logo);
 		}
 		return logoHorizontalLayout;
-	}
+	}*/
 	
-	public MVerticalLayout getButtonVerticalLayout() {
-		if(buttonVerticalLayout == null) {
-			buttonVerticalLayout = new MVerticalLayout();
-			buttonVerticalLayout.setStyleName("navigator-spacer");
-			buttonVerticalLayout.withFullWidth().withFullHeight().withMargin(false);
-			buttonVerticalLayout.setDefaultComponentAlignment(Alignment.TOP_LEFT);
-			buttonVerticalLayout.addComponent(getOverviewButton());
-			buttonVerticalLayout.addComponent(getBtnSpacerVerticalLayout());
+	public HorizontalLayout getLogoWrapperHorizontalLayout() {
+		if(logoWrapperHorizontalLayout == null) {
+			Label logoIcon = new Label("<h1>"+FontAwesome.CIRCLE_O_NOTCH.getHtml()+"</h1>", ContentMode.HTML);
+			Label logoText = new Label("<h2><strong>GRIP</strong></h2>", ContentMode.HTML);
+			Label labelSpace = new Label("&nbsp;&nbsp;&nbsp;", ContentMode.HTML);
+			logoWrapperHorizontalLayout = new HorizontalLayout(logoIcon, labelSpace, logoText);
+			logoWrapperHorizontalLayout.setComponentAlignment(logoIcon, Alignment.MIDDLE_CENTER);
+			logoWrapperHorizontalLayout.setComponentAlignment(labelSpace, Alignment.MIDDLE_CENTER);
+			logoWrapperHorizontalLayout.setComponentAlignment(logoText, Alignment.MIDDLE_CENTER);
+			logoWrapperHorizontalLayout.setPrimaryStyleName(ValoTheme.MENU_TITLE);
 		}
-		return buttonVerticalLayout;
+		return logoWrapperHorizontalLayout;
 	}
 	
-	public MVerticalLayout getBtnSpacerVerticalLayout() {
-		if(btnSpacerVerticalLayout == null) {
-			btnSpacerVerticalLayout = new MVerticalLayout().withFullHeight();
-			btnSpacerVerticalLayout.withCaption("horst");
-		}
-		return btnSpacerVerticalLayout;
-	}
-	
-	public MButton getOverviewButton() {
+	public Button getOverviewButton() {
 		if(overviewButton == null) {
-			overviewButton = new MButton();
+			overviewButton = new Button();
 			overviewButton.setIcon(FontAwesome.HOME);
-			overviewButton.setPrimaryStyleName("valo-menu-item");
-			overviewButton.withCaption("Home").withDescription("Switch to home screen.");//.withWidth("200px");
+			overviewButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			overviewButton.setCaption("Overview");
+			overviewButton.setDescription("Switch to home screen.");
+			overviewButton.setSizeUndefined();
+			overviewButton.setWidth(BUTTON_WIDTH);
 		}
 		return overviewButton;
+	}
+	
+	public Button getUsersButton() {
+		if(usersButton == null) {
+			usersButton = new Button();
+			usersButton.setIcon(FontAwesome.USERS);
+			usersButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			usersButton.setCaption("Users");
+			usersButton.setDescription("Edit users.");
+			usersButton.setSizeUndefined();
+			usersButton.setWidth(BUTTON_WIDTH);
+		}
+		return usersButton;
+	}
+	
+	public Button getSignOutButton() {
+		if(signOutButton == null) {
+			signOutButton = new Button();
+			signOutButton.setIcon(FontAwesome.SIGN_OUT);
+			signOutButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			signOutButton.setCaption("Sing Out");
+			signOutButton.setDescription("Edit users.");
+			signOutButton.setSizeUndefined();
+			signOutButton.setWidth(BUTTON_WIDTH);
+		}
+		return signOutButton;
 	}
 }
