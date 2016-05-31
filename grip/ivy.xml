@@ -43,5 +43,12 @@
 		
 		<!-- Canvas Add-on (https://vaadin.com/directory#!addon/canvas) -->
 		<dependency org="org.vaadin.addons" name="canvas"  rev="2.1" />
+		
+		<!-- LoginForm Add-on (https://vaadin.com/directory#!addon/loginform) -->		
+		<dependency org="org.vaadin.addons" name="loginform" rev="0.6.2" />	
+			
+		<!-- Viritin - The "commons" library for Vaadin (https://github.com/viritin/viritin/) -->
+		<dependency org="org.vaadin" name="viritin" rev="1.51" />
+		
 	</dependencies>
 </ivy-module>
