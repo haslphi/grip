@@ -1,4 +1,4 @@
-package at.jku.se.grip.event;
+package at.jku.se.grip.ui.events;
 
 import at.jku.se.grip.GripUI;
 

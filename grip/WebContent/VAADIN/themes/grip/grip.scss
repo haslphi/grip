@@ -26,6 +26,7 @@
 
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+$blue: #3bbfce;
 
 @import "../valo/valo.scss";
 
@@ -33,4 +34,8 @@
   @include valo;
 
   // Insert your own theme rules here
+}
+
+.navigator {
+	background-color: #3bbfce;
 }

@@ -18,6 +18,16 @@
  *
  * @group util
  */
+.navigator {
+	background-color: #3bbfce;
+}
+
+.navigator-logo {
+	background-color: #ff80c0;
+}
+.navigator-spacer {
+	background-color: #c0c0c0;
+}
 
 @-webkit-keyframes valo-animate-in-fade {
 		0% {

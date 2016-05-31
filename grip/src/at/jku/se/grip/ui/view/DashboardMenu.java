@@ -1,6 +1,4 @@
-package at.jku.se.grip.view;
-
-import at.jku.se.grip.event.Login;
+package at.jku.se.grip.ui.view;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -13,6 +11,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.themes.ValoTheme;
+
+import at.jku.se.grip.ui.events.Login;
 
 @SuppressWarnings("serial")
 public final class DashboardMenu extends CustomComponent {

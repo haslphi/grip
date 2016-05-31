@@ -1,4 +1,4 @@
-package at.jku.se.grip.view;
+package at.jku.se.grip.ui.view;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
