@@ -2,7 +2,6 @@ package at.jku.se.grip.ui.login;
 
 import at.jku.se.grip.GripUI;
 import at.jku.se.grip.ui.events.LoginEvent;
-
 import com.vaadin.ui.Button;
 
 public class LoginController {

@@ -19,7 +19,10 @@ import at.jku.se.grip.dao.impl.UserDAO;
 import at.jku.se.grip.ui.ApplicationController;
 import at.jku.se.grip.ui.ApplicationView;
 import at.jku.se.grip.ui.events.LoginEvent;
+import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.login.LoginController;
+import at.jku.se.grip.ui.users.ContactForm;
+import at.jku.se.grip.ui.users.UsersController;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -57,6 +60,9 @@ public class GripUI extends UI {
 		switchToLogin();
 		
 		//testing(view);
+		
+		//testUserView();
+
 	}
 	
 	public static EventBus getEventBus(){
@@ -69,7 +75,11 @@ public class GripUI extends UI {
 		if(event.getValidLogin()){
 			switchToApplication();			
 		}
-
+	}
+	
+	@Subscribe
+	public void listenLogout(LogoutEvent event){
+		switchToLogin();	
 	}
 	
 	private void switchToApplication(){
@@ -82,6 +92,11 @@ public class GripUI extends UI {
 		loginController = new LoginController();
 		setContent(loginController.getView());
 		applicationController = null;
+	}
+	
+	private void testUserView(){
+		UsersController usersController= new UsersController();
+		setContent(usersController.getView());
 	}
 	
 	public static void testing(ApplicationView view) {
@@ -128,7 +143,6 @@ public class GripUI extends UI {
 				e.printStackTrace();
 			}
 		}
-
 
 		return result;
 	}

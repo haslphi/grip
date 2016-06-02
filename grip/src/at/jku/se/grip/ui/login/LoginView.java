@@ -3,11 +3,7 @@ package at.jku.se.grip.ui.login;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
@@ -117,7 +113,7 @@ public class LoginView extends CustomComponent {
 	
 	private Label getTitleLabel(){
 		if(title == null){
-			title = new Label("QuickTickets Dashboardfff");
+			title = new Label("QuickTickets Dashboard");
 	        title.setSizeUndefined();
 	        title.addStyleName(ValoTheme.LABEL_H3);
 	        title.addStyleName(ValoTheme.LABEL_LIGHT);

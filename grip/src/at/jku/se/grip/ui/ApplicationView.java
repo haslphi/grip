@@ -16,7 +16,7 @@ public class ApplicationView extends HorizontalLayout {
 	
 	private NavigatorView navigatorView = null;
 	public LoginView loginView= null;
-	private ComponentContainer mainComponentContainer = null;
+	public ComponentContainer mainComponentContainer = null;
 	
 	public ApplicationView() {
 		super();
@@ -25,15 +25,9 @@ public class ApplicationView extends HorizontalLayout {
 	
 	private void init() {
 		this.setSizeFull();
-		//this.addComponent(getLoginview());
+		this.setWidthUndefined(); //TODO: Ist das hier richtig?
 		this.addComponent(getNavigatorView());		
-	}
-	
-	public LoginView getLoginview(){
-		if(loginView==null){
-			loginView = new LoginView();
-		}
-		return loginView;
+		//this.addComponent(getMainComponentContainer());	
 	}
 	
 	public NavigatorView getNavigatorView() {
