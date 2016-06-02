@@ -9,27 +9,34 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.viritin.fields.MTable;
 
+import at.jku.se.grip.beans.User;
+import at.jku.se.grip.common.Constants;
+import at.jku.se.grip.dao.impl.UserDAO;
+import at.jku.se.grip.ui.ApplicationController;
+import at.jku.se.grip.ui.ApplicationView;
+import at.jku.se.grip.ui.events.LoginEvent;
+import at.jku.se.grip.ui.login.LoginController;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
-import at.jku.se.grip.beans.User;
-import at.jku.se.grip.common.Constants;
-import at.jku.se.grip.dao.impl.UserDAO;
-import at.jku.se.grip.ui.ApplicationView;
-
 @SuppressWarnings("serial")
 @Theme("grip")
 public class GripUI extends UI {
 	//private Canvas canvas;
 	public String user;
+	private LoginController loginController = null;
+	private ApplicationController applicationController = null;
+	private static EventBus eventBus = null;
 
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = GripUI.class, widgetset="at.jku.se.grip.widgetset.GripWidgetset")
@@ -38,21 +45,43 @@ public class GripUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
-		/*
-		final HorizontalLayout layout = new HorizontalLayout();
-	    layout.setMargin(true);
-	    layout.setSpacing(true);
-	  
-	    LoginScreen.buildLoginScreen(layout);
-	    setContent(layout);
-	    */
 
 		setSizeFull();
 		
-		ApplicationView view = new ApplicationView();
-		setContent(view);
+		eventBus = new EventBus();
+		eventBus.register(this);
 		
-		testing(view);
+		//LoginEvent x = new LoginEvent(true);
+		//eventBus.post(x);
+		
+		switchToLogin();
+		
+		//testing(view);
+	}
+	
+	public static EventBus getEventBus(){
+		return eventBus;
+	}
+	
+	@Subscribe
+	public void listenLogin(LoginEvent event){
+		System.out.println("Event arrived " + event.getValidLogin());
+		if(event.getValidLogin()){
+			switchToApplication();			
+		}
+
+	}
+	
+	private void switchToApplication(){
+		applicationController = new ApplicationController();
+		setContent(applicationController.getView());
+		loginController = null;
+	}
+	
+	private void switchToLogin(){
+		loginController = new LoginController();
+		setContent(loginController.getView());
+		applicationController = null;
 	}
 	
 	public static void testing(ApplicationView view) {
