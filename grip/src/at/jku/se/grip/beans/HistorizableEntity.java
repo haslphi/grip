@@ -27,7 +27,7 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 	
 	@Override
 	public boolean isNew() {
-		return getId() != null && StringUtils.isNotBlank(getId().getId());
+		return super.isNew() && StringUtils.isNotBlank(getId().getId());
 	}
 
 }

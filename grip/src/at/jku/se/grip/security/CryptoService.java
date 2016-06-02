@@ -1,5 +1,6 @@
 package at.jku.se.grip.security;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
@@ -9,19 +10,16 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CryptoService {
 
 	public static final String AES = "AES";
-	private static CryptoService service;
-
-
-	private CryptoService() {
-	}
+	private static CryptoService service = new CryptoService();
 
 	public static CryptoService getInstance() {
-		if (service == null) {
-			service = new CryptoService();
-		}
 		return service;
 	}
 

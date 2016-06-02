@@ -23,6 +23,11 @@ public abstract class VersionableEntity<ID extends GenericPK> extends GenericEnt
 	@Embedded
 	private Header header = new Header();
 	
+	@Override
+	public boolean isNew() {
+		return super.isNew() && version != null;
+	}
+	
 	public boolean isDeleted() {
 		return header != null && header.getFlaggedDeletedBy() != null && header.getFlaggedDeletedDate() != null;
 	}

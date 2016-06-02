@@ -4,19 +4,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * Singleton class to hold GripEntityManager.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GripEntityManager {
 	private static GripEntityManager singleton = new GripEntityManager();
 	private static EntityManagerFactory factory = Persistence.createEntityManagerFactory(Constants.DEFAULT_PERSISTENCE_IDENTIFIER);
 	private final ThreadLocal<EntityManager> threadLocalEntityManager =  new ThreadLocal<EntityManager>();
 	private final ThreadLocal<Integer> sessions = new ThreadLocal<Integer>();
 
-	private GripEntityManager() {
-		
-	}
-	
 	/**
 	 * @return the single instance of the GripEntityManager
 	 */
