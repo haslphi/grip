@@ -28,7 +28,7 @@ public class ContactForm extends CustomComponent {
 	private FormLayout getLoginForm(){
 		if (mainLayout == null){
 			mainLayout = new FormLayout();
-			mainLayout.setSizeUndefined();
+			//mainLayout.setSizeUndefined();
 			mainLayout.setMargin(true);
 			
 			mainLayout.addComponent(getActions());

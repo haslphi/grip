@@ -40,8 +40,10 @@ public class ApplicationController {
 		GripUI.getEventBus().post(new LogoutEvent());
 	}
 	
-	private void switchToOverview(){		
-		overviewController = new OverviewController();
+	private void switchToOverview(){
+		if(overviewController==null){
+			overviewController = new OverviewController();			
+		}
 		if(actComponent!=null){
 			view.removeComponent(actComponent);
 		}
@@ -50,12 +52,15 @@ public class ApplicationController {
 	}
 	
 	private void switchToUsers(){
-		usersController = new UsersController();
+		if(usersController==null){
+			usersController = new UsersController();			
+		}
 		if(actComponent!=null){
 			view.removeComponent(actComponent);
 		}
 		actComponent = usersController.getView();
 		view.addComponent(actComponent);
+		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
 	public ApplicationView getView(){

@@ -25,7 +25,6 @@ public class ApplicationView extends HorizontalLayout {
 	
 	private void init() {
 		this.setSizeFull();
-		this.setWidthUndefined(); //TODO: Ist das hier richtig?
 		this.addComponent(getNavigatorView());		
 		//this.addComponent(getMainComponentContainer());	
 	}

@@ -31,9 +31,11 @@ public class UsersView extends CustomComponent {
 	
 	private void init(){
 		this.setCompositionRoot(getMainLayout());
+		this.setSizeFull();
+		refreshContacts();
 	}
 	
-	private HorizontalLayout getMainLayout(){
+	public HorizontalLayout getMainLayout(){
 		if (mainLayout == null){
 			mainLayout = new HorizontalLayout();
 			mainLayout.setSizeFull();
@@ -46,7 +48,7 @@ public class UsersView extends CustomComponent {
 		return mainLayout;
 	}
 	
-	private VerticalLayout getLeft(){
+	public VerticalLayout getLeft(){
 		if(left == null){
 	        left = new VerticalLayout();
 	        left.setSizeFull();
@@ -116,6 +118,6 @@ public class UsersView extends CustomComponent {
     private void refreshContacts(String stringFilter) {
         contactList.setContainerDataSource(new BeanItemContainer<>(
                 Contact.class, service.findAll(stringFilter)));
-        contactForm.setVisible(false);
+        contactForm.setVisible(true);
     }
 }
