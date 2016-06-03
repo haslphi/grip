@@ -6,6 +6,7 @@ import javax.persistence.criteria.Order;
 
 import at.jku.se.grip.beans.GenericEntity;
 import at.jku.se.grip.beans.GenericPK;
+import at.jku.se.grip.common.CriteriaFactory;
 
 public interface IGenericDAO<T extends GenericEntity<? extends GenericPK>> {
 	Class<T> getType();
@@ -18,8 +19,7 @@ public interface IGenericDAO<T extends GenericEntity<? extends GenericPK>> {
 	//List<T> findByCriteria(CriteriaFactory factory);
 	//Integer countByCriteria(CriteriaFactory factory);
 	
-	//T save(T bean);
-	//T save(T bean, boolean internal);
+	T save(T bean);
 	
-	//T delete(T bean);
+	T delete(T bean);
 }

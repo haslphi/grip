@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Generic primary key class, to force all descendants to override hashCode and equals method.
+ * 
+ * @author Philipp
+ *
+ */
 @MappedSuperclass
 public abstract class GenericPK implements Serializable {
 
