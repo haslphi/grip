@@ -25,7 +25,7 @@ public abstract class VersionableEntity<ID extends GenericPK> extends GenericEnt
 	
 	@Override
 	public boolean isNew() {
-		return super.isNew() && version != null;
+		return super.isNew() || version == null;
 	}
 	
 	public boolean isDeleted() {

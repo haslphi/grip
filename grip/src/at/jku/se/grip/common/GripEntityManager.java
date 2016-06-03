@@ -8,7 +8,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 /**
- * Singleton class to hold GripEntityManager.
+ * Singleton class to provide the JPA EntityManager and handle persistence sessions.
+ * 
+ * @author Philipp
+ *
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GripEntityManager {

@@ -4,6 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Root entity for all persistence entities.
+ * 
+ * @author Philipp
+ *
+ * @param <ID> a generic primary key
+ */
 @MappedSuperclass
 public abstract class GenericEntity<ID extends GenericPK> implements Serializable {
 
@@ -15,8 +22,31 @@ public abstract class GenericEntity<ID extends GenericPK> implements Serializabl
 	public abstract ID getId();
 	public abstract void setId(ID id);
 	
+	/**
+	 * Check if this is a new bean, or if the bean is already persisted.
+	 * 
+	 * @return
+	 */
 	public boolean isNew() {
 		return getId() == null;
+	}
+	
+	/**
+	 * Override to do some things (e.g. initialization of custom id) directly before persisting the bean.
+	 */
+	public void preCreate() {
+	}
+	
+	/**
+	 * Override to do some things directly before merging the bean.
+	 */
+	public void preUpdate() {
+	}
+	
+	/**
+	 * Override to do some things directly before removing the bean.
+	 */
+	public void preDelete() {
 	}
 	
 	@Override

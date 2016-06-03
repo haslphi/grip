@@ -1,7 +1,18 @@
 package at.jku.se.grip.common;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * This dummy LogUtils will only "log" on console.
+ * 
+ * @author Philipp
+ *
+ */
 public class LogUtilities {
 	private static final LogUtilities logger = new LogUtilities();
+	private static final String datePattern = "HH:mm:ss.SSS";
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
 	
 	private LogUtilities() {
 	}
@@ -11,18 +22,22 @@ public class LogUtilities {
 	}
 	
 	public void debug(String message) {
-		System.out.println("[DEBUG]: " + message);
+		System.out.println("[DEBUG]<" + getFormattedDate() + ">: " + message);
 	}
 	
 	public void info(String message) {
-		System.out.println("[INFO]: " + message);
+		System.out.println("[INFO]<" + getFormattedDate() + ">: " + message);
 	}
 	
 	public void warn(String message) {
-		System.out.println("[WARN]: " + message);
+		System.out.println("[WARN]<" + getFormattedDate() + ">: " + message);
 	}
 	
 	public void error(String message) {
-		System.err.println("[ERROR]: " + message);
+		System.err.println("[ERROR]<" + getFormattedDate() + ">: " + message);
+	}
+	
+	private String getFormattedDate() {
+		return dateFormat.format(new Date());
 	}
 }
