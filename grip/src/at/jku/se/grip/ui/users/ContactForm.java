@@ -22,13 +22,12 @@ public class ContactForm extends CustomComponent {
     }
     
 	private void init(){
-		this.setCompositionRoot(getLoginForm());
+		this.setCompositionRoot(getMainLayout());
 	}
 	
-	private FormLayout getLoginForm(){
+	private FormLayout getMainLayout(){
 		if (mainLayout == null){
 			mainLayout = new FormLayout();
-			//mainLayout.setSizeUndefined();
 			mainLayout.setMargin(true);
 			
 			mainLayout.addComponent(getActions());

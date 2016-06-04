@@ -2,7 +2,6 @@ package at.jku.se.grip;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,7 +20,6 @@ import at.jku.se.grip.ui.ApplicationView;
 import at.jku.se.grip.ui.events.LoginEvent;
 import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.login.LoginController;
-import at.jku.se.grip.ui.users.ContactForm;
 import at.jku.se.grip.ui.users.UsersController;
 
 import com.google.common.eventbus.EventBus;
@@ -91,6 +89,7 @@ public class GripUI extends UI {
 	private void switchToLogin(){
 		loginController = new LoginController();
 		setContent(loginController.getView());
+
 		applicationController = null;
 	}
 	

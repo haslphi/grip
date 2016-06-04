@@ -3,9 +3,10 @@ package at.jku.se.grip.ui.login;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
@@ -14,16 +15,16 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-public class LoginView extends CustomComponent {
+public class LoginView extends GridLayout {
 	
 	private VerticalLayout loginFormVerticalLayout = null;
 	private HorizontalLayout fields = null;
 	private CssLayout labels = null;
 	private TextField username = null;
 	private PasswordField password = null;
-	private Button signin = null;
+	private Button signin = null;	
 	private Label welcome = null;
-	private Label title = null;
+//	private Label title = null;
 	
 	public LoginView(){
 		super();
@@ -31,7 +32,9 @@ public class LoginView extends CustomComponent {
 	}
 	
 	private void init(){
-		this.setCompositionRoot(getLoginForm());
+		this.addComponent(getLoginForm());
+		this.setSizeFull();
+		this.setComponentAlignment(loginFormVerticalLayout, Alignment.MIDDLE_CENTER);
 	}
 	
 	private VerticalLayout getLoginForm(){
@@ -66,9 +69,9 @@ public class LoginView extends CustomComponent {
 		if(labels == null){
 			labels = new CssLayout();
 	        labels.addStyleName("labels");
-			
+
 			labels.addComponent(getWelcomeLabel());
-			labels.addComponent(getTitleLabel());			
+//			labels.addComponent(getTitleLabel());			
 		}
 		return labels;
 	}
@@ -103,23 +106,24 @@ public class LoginView extends CustomComponent {
 	
 	private Label getWelcomeLabel(){
 		if(welcome == null){
-			welcome = new Label("GRIP");
+			welcome = new Label(" GRIP");
 	        welcome.setSizeUndefined();
-	        welcome.addStyleName(ValoTheme.LABEL_H4);
+	        welcome.addStyleName(ValoTheme.LABEL_H1);
 	        welcome.addStyleName(ValoTheme.LABEL_COLORED);
 		}
 		return welcome;
 	}
 	
-	private Label getTitleLabel(){
-		if(title == null){
-			title = new Label("QuickTickets Dashboard");
-	        title.setSizeUndefined();
-	        title.addStyleName(ValoTheme.LABEL_H3);
-	        title.addStyleName(ValoTheme.LABEL_LIGHT);
-		}
-		return title;
-	}
-	
 
+	
+//	private Label getTitleLabel(){
+//		if(title == null){
+//			title = new Label("Anmeldefenster");
+//	        title.setSizeUndefined();
+//	        title.addStyleName(ValoTheme.LABEL_H3);
+//	        title.addStyleName(ValoTheme.LABEL_LIGHT);
+//		}
+//		return title;
+//	}
+	
 }

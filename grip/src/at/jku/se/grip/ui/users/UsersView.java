@@ -14,8 +14,8 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class UsersView extends CustomComponent {
 
-	private HorizontalLayout actions = null;
 	private HorizontalLayout mainLayout = null;
+	private HorizontalLayout actions = null;
 	private VerticalLayout left = null;
 	private TextField filter = null;
 	private Grid contactList = null;
@@ -42,8 +42,8 @@ public class UsersView extends CustomComponent {
 			
 			mainLayout.addComponent(getLeft());
 			mainLayout.addComponent(getContactForm());
-			
-	        mainLayout.setExpandRatio(left, 1);
+	        mainLayout.setExpandRatio(left, 5);
+	        mainLayout.setExpandRatio(contactForm, 1);
 		}				
 		return mainLayout;
 	}
@@ -118,6 +118,6 @@ public class UsersView extends CustomComponent {
     private void refreshContacts(String stringFilter) {
         contactList.setContainerDataSource(new BeanItemContainer<>(
                 Contact.class, service.findAll(stringFilter)));
-        contactForm.setVisible(true);
+        contactForm.setVisible(false);
     }
 }

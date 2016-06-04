@@ -23,7 +23,8 @@ public class LoginController {
 		String password = view.getpasswordPasswordField().getValue();
 		
 		if(username!=null && password!=null){
-			GripUI.getEventBus().post(new LoginEvent("user".equals(username)&&"pwd".equals(password)));		
+//			GripUI.getEventBus().post(new LoginEvent("user".equals(username)&&"pwd".equals(password)));
+			GripUI.getEventBus().post(new LoginEvent(true));	
 		} else {
 			GripUI.getEventBus().post(new LoginEvent(false));			
 		}

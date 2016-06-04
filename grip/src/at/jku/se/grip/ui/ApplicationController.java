@@ -3,7 +3,6 @@ package at.jku.se.grip.ui;
 import at.jku.se.grip.GripUI;
 import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.overview.OverviewController;
-import at.jku.se.grip.ui.overview.OverviewView;
 import at.jku.se.grip.ui.users.UsersController;
 
 import com.vaadin.ui.Button;
@@ -49,6 +48,7 @@ public class ApplicationController {
 		}
 		actComponent = overviewController.getView();
 		view.addComponent(actComponent);
+		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
 	private void switchToUsers(){
