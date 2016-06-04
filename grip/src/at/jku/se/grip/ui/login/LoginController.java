@@ -1,7 +1,9 @@
 package at.jku.se.grip.ui.login;
 
 import at.jku.se.grip.GripUI;
+import at.jku.se.grip.beans.User;
 import at.jku.se.grip.ui.events.LoginEvent;
+
 import com.vaadin.ui.Button;
 
 public class LoginController {
@@ -24,9 +26,11 @@ public class LoginController {
 		
 		if(username!=null && password!=null){
 //			GripUI.getEventBus().post(new LoginEvent("user".equals(username)&&"pwd".equals(password)));
-			GripUI.getEventBus().post(new LoginEvent(true));	
+			// TODO check user with DB
+			User user = new User();
+			GripUI.getEventBus().post(new LoginEvent(true, user));	
 		} else {
-			GripUI.getEventBus().post(new LoginEvent(false));			
+			GripUI.getEventBus().post(new LoginEvent(false, null));			
 		}
 	}
 	

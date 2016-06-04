@@ -1,6 +1,7 @@
 package at.jku.se.grip.ui;
 
 import at.jku.se.grip.GripUI;
+import at.jku.se.grip.ui.drawboard.DrawboardController;
 import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.overview.OverviewController;
 import at.jku.se.grip.ui.users.UsersController;
@@ -10,6 +11,7 @@ import com.vaadin.ui.Component;
 
 public class ApplicationController {
 	private UsersController usersController = null;
+	private DrawboardController drawboardController = null; 
 	private OverviewController overviewController = null;
 	private Component actComponent = null; 
 
@@ -23,12 +25,17 @@ public class ApplicationController {
 	private void init(){
 		switchToOverview();
 		view.getNavigatorView().getOverviewButton().addClickListener(this::overview);
+		view.getNavigatorView().getDrawboardButton().addClickListener(this::drawboard);
 		view.getNavigatorView().getUsersButton().addClickListener(this::users);
 		view.getNavigatorView().getSignOutButton().addClickListener(this::signOut);
 	}
 	
 	private void overview (Button.ClickEvent event){
 		switchToOverview();
+	}
+	
+	private void drawboard(Button.ClickEvent event) {
+		switchToDrawboard();
 	}
 	
 	private void users (Button.ClickEvent event){
@@ -47,6 +54,18 @@ public class ApplicationController {
 			view.removeComponent(actComponent);
 		}
 		actComponent = overviewController.getView();
+		view.addComponent(actComponent);
+		view.setExpandRatio(actComponent, 1.0f);
+	}
+	
+	private void switchToDrawboard(){
+		if(drawboardController==null){
+			drawboardController = new DrawboardController();			
+		}
+		if(actComponent!=null){
+			view.removeComponent(actComponent);
+		}
+		actComponent = drawboardController.getView();
 		view.addComponent(actComponent);
 		view.setExpandRatio(actComponent, 1.0f);
 	}

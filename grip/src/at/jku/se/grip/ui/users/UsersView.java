@@ -1,7 +1,6 @@
 package at.jku.se.grip.ui.users;
 
 import at.jku.se.grip.backend.Contact;
-import at.jku.se.grip.backend.ContactService;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
@@ -21,8 +20,6 @@ public class UsersView extends CustomComponent {
 	private Grid contactList = null;
 	private Button newContact = null;
     private ContactForm contactForm = null;
-    
-    ContactService service = ContactService.createDemoService();
 	
 	public UsersView(){
 		super();
@@ -32,7 +29,6 @@ public class UsersView extends CustomComponent {
 	private void init(){
 		this.setCompositionRoot(getMainLayout());
 		this.setSizeFull();
-		refreshContacts();
 	}
 	
 	public HorizontalLayout getMainLayout(){
@@ -74,10 +70,11 @@ public class UsersView extends CustomComponent {
 		return actions;
 	}
 	
-	private TextField getFilter(){
+	public TextField getFilter(){
 		if(filter == null) {
 			filter = new TextField();
 	        filter.setWidth("100%");
+	        filter.setInputPrompt("Find User...");
 		}
 		return filter;
 	}
@@ -111,13 +108,4 @@ public class UsersView extends CustomComponent {
 		return contactList;
 	}
 	
-    void refreshContacts() {
-        refreshContacts(filter.getValue());
-    }
-
-    private void refreshContacts(String stringFilter) {
-        contactList.setContainerDataSource(new BeanItemContainer<>(
-                Contact.class, service.findAll(stringFilter)));
-        contactForm.setVisible(false);
-    }
 }

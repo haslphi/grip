@@ -1,6 +1,4 @@
-package at.jku.se.grip.ui.overview;
-
-import javafx.scene.paint.Color;
+package at.jku.se.grip.ui.drawboard;
 
 import org.vaadin.hezamu.canvas.Canvas;
 
@@ -10,16 +8,18 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class OverviewView extends CustomComponent {
+public class DrawboardView extends CustomComponent {
 
 	private HorizontalLayout mainLayout = null;
+	private VerticalLayout drawLayout = null;
 	private HorizontalLayout canvasLayout = null;
+	private Label canvasLabel = null;
     private FormLayout selectMenuFormLayout = null;   
     private ComboBox selectPathComboBox = null;   
 	private HorizontalLayout selectDeleteButtons = null;
@@ -35,7 +35,7 @@ public class OverviewView extends CustomComponent {
     
     ContactService service = ContactService.createDemoService();
 	
-	public OverviewView(){
+	public DrawboardView(){
 		super();
 		init();
 	}
@@ -51,26 +51,44 @@ public class OverviewView extends CustomComponent {
 			mainLayout.setSizeFull();
 	
 			mainLayout.addComponent(getSelectMenu());
-			mainLayout.addComponent(getCanvasLayout());
+			mainLayout.addComponent(getDrawLayout());
 			
 //			mainLayout.addComponent(getCanvas());
 			
 	        mainLayout.setExpandRatio(selectMenuFormLayout, 1);
-	        mainLayout.setExpandRatio(canvasLayout, 3);
+	        mainLayout.setExpandRatio(drawLayout, 3);
 		}				
 		return mainLayout;
+	}
+	
+	public VerticalLayout getDrawLayout(){
+		if(drawLayout == null){
+			drawLayout = new VerticalLayout();
+			drawLayout.setSizeFull();
+			drawLayout.addComponent(getCanvasLabel());
+			drawLayout.addComponent(getCanvasLayout());
+			drawLayout.setExpandRatio(getCanvasLayout(), 1);
+		}
+		return drawLayout;
 	}
 	
 	public HorizontalLayout getCanvasLayout(){
 		if(canvasLayout == null){
 			canvasLayout = new HorizontalLayout();
 			canvasLayout.setWidth("880px");
-			canvasLayout.setHeight("660px");
+			canvasLayout.setHeight("620px");
 			canvasLayout.addComponent(getCanvas());
 			//canvasLayout.addStyleName("well");
 			canvasLayout.addStyleName("card");
 		}
 		return canvasLayout;
+	}
+	
+	public Label getCanvasLabel() {
+		if(canvasLabel == null) {
+			canvasLabel = new Label("Drawboard");
+		}
+		return canvasLabel;
 	}
 	
 	public VerticalLayout getLeft(){
@@ -162,7 +180,7 @@ public class OverviewView extends CustomComponent {
 		return cancelButton;
 	}
 	
-	private Canvas getCanvas(){
+	public Canvas getCanvas(){
 		if(canvas == null) {
 			canvas = new Canvas();
 			canvas.setSizeFull();

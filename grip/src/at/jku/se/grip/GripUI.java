@@ -34,7 +34,7 @@ import com.vaadin.ui.UI;
 @Theme("grip")
 public class GripUI extends UI {
 	//private Canvas canvas;
-	public String user;
+	public static User user;
 	private LoginController loginController = null;
 	private ApplicationController applicationController = null;
 	private static EventBus eventBus = null;
@@ -69,8 +69,9 @@ public class GripUI extends UI {
 	
 	@Subscribe
 	public void listenLogin(LoginEvent event){
-		System.out.println("Event arrived " + event.getValidLogin());
-		if(event.getValidLogin()){
+		System.out.println("Event arrived " + event.isValidLogin());
+		if(event.isValidLogin()){
+			user = event.getUser();
 			switchToApplication();			
 		}
 	}

@@ -23,6 +23,7 @@ public class NavigatorView extends CustomComponent {
 	private VerticalLayout menuVerticalLayout = null;
 	private HorizontalLayout logoWrapperHorizontalLayout = null;
 	private Button overviewButton = null;
+	private Button drawboardButton = null;
 	private Button usersButton = null;
 	private Button signOutButton = null;
 	
@@ -51,6 +52,7 @@ public class NavigatorView extends CustomComponent {
 
 			menuVerticalLayout.addComponent(getLogoWrapperHorizontalLayout());
 			menuVerticalLayout.addComponent(getOverviewButton());
+			menuVerticalLayout.addComponent(getDrawboardButton());
 	        menuVerticalLayout.addComponent(getUsersButton());
 	        menuVerticalLayout.addComponent(getSignOutButton());
 		}
@@ -98,6 +100,19 @@ public class NavigatorView extends CustomComponent {
 			overviewButton.setWidth(BUTTON_WIDTH);
 		}
 		return overviewButton;
+	}
+	
+	public Button getDrawboardButton() {
+		if(drawboardButton == null) {
+			drawboardButton = new Button();
+			drawboardButton.setIcon(FontAwesome.PENCIL);
+			drawboardButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			drawboardButton.setCaption("Drawboard");
+			drawboardButton.setDescription("Switch to the drawboard.");
+			drawboardButton.setSizeUndefined();
+			drawboardButton.setWidth(BUTTON_WIDTH);
+		}
+		return drawboardButton;
 	}
 	
 	public Button getUsersButton() {

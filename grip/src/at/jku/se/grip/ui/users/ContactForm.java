@@ -15,6 +15,9 @@ public class ContactForm extends CustomComponent {
     private TextField phone = null;
     private TextField email = null;
     private DateField birthDate = null;
+    
+//    private Contact contact;
+//    private BeanFieldGroup<Contact> formFieldBindings;
 
     public ContactForm() {  	
     	super();
@@ -60,14 +63,14 @@ public class ContactForm extends CustomComponent {
 		return saveCancelButtons;
 	}
 	
-	private Button getSaveButton(){
+	public Button getSaveButton(){
 		if(saveButton == null) {
 			saveButton = new Button("Save");
 		}
 		return saveButton;
 	}	
 	
-	private Button getCancleButton(){
+	public Button getCancleButton(){
 		if(cancelButton == null) {
 			cancelButton = new Button("Cancel");
 		}
@@ -108,5 +111,27 @@ public class ContactForm extends CustomComponent {
 		}
 		return birthDate;
 	}
-
+	
+//    public void edit(Contact contact) {
+//        this.contact = contact;
+//        if(contact != null) {
+//            // Bind the properties of the contact POJO to fiels in this form
+//            formFieldBindings = BeanFieldGroup.bindFieldsBuffered(contact, this);
+//            firstName.focus();
+//        }
+//        setVisible(contact != null);
+//    }
+//    
+//    public BeanFieldGroup<Contact> getFormFieldBindings(){
+//    	return formFieldBindings;
+//    }
+//    
+//    public Contact getContact(){
+//    	return contact;
+//    }
+	
+  public TextField getName(){
+	return firstName;
+  }
+    
 }
