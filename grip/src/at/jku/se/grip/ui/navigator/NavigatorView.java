@@ -24,6 +24,7 @@ public class NavigatorView extends CustomComponent {
 	private HorizontalLayout logoWrapperHorizontalLayout = null;
 	private Button overviewButton = null;
 	private Button drawboardButton = null;
+	private Button robotsButton = null;
 	private Button usersButton = null;
 	private Button signOutButton = null;
 	
@@ -53,6 +54,7 @@ public class NavigatorView extends CustomComponent {
 			menuVerticalLayout.addComponent(getLogoWrapperHorizontalLayout());
 			menuVerticalLayout.addComponent(getOverviewButton());
 			menuVerticalLayout.addComponent(getDrawboardButton());
+			menuVerticalLayout.addComponent(getRobotsButton());
 	        menuVerticalLayout.addComponent(getUsersButton());
 	        menuVerticalLayout.addComponent(getSignOutButton());
 		}
@@ -115,6 +117,19 @@ public class NavigatorView extends CustomComponent {
 		return drawboardButton;
 	}
 	
+	public Button getRobotsButton() {
+		if(robotsButton == null) {
+			robotsButton = new Button();
+			robotsButton.setIcon(FontAwesome.GEARS);
+			robotsButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
+			robotsButton.setCaption("Robots");
+			robotsButton.setDescription("Edit robots.");
+			robotsButton.setSizeUndefined();
+			robotsButton.setWidth(BUTTON_WIDTH);
+		}
+		return robotsButton;
+	}
+	
 	public Button getUsersButton() {
 		if(usersButton == null) {
 			usersButton = new Button();
@@ -134,7 +149,7 @@ public class NavigatorView extends CustomComponent {
 			signOutButton.setIcon(FontAwesome.SIGN_OUT);
 			signOutButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			signOutButton.setCaption("Sing Out");
-			signOutButton.setDescription("Edit users.");
+			signOutButton.setDescription("Sign out.");
 			signOutButton.setSizeUndefined();
 			signOutButton.setWidth(BUTTON_WIDTH);
 		}

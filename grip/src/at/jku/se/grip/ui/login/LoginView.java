@@ -58,7 +58,7 @@ public class LoginView extends GridLayout {
 	        fields.addStyleName("fields");
 	        
 	        fields.addComponent(getUsernameTextField());
-	        fields.addComponent(getpasswordPasswordField());
+	        fields.addComponent(getPasswordPasswordField());
 	        fields.addComponent(getSignInButton());
 			
 		}
@@ -85,7 +85,7 @@ public class LoginView extends GridLayout {
 		return username;
 	}
 	
-	public PasswordField getpasswordPasswordField(){
+	public PasswordField getPasswordPasswordField(){
 		if(password == null){
 			password = new PasswordField();
 	        password.setIcon(FontAwesome.LOCK);

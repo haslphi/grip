@@ -12,8 +12,11 @@ import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.viritin.fields.MTable;
 
+import at.jku.se.grip.beans.HistoryPK;
 import at.jku.se.grip.beans.User;
 import at.jku.se.grip.common.Constants;
+import at.jku.se.grip.common.GripEntityManager;
+import at.jku.se.grip.dao.DaoServiceRegistry;
 import at.jku.se.grip.dao.impl.UserDAO;
 import at.jku.se.grip.ui.ApplicationController;
 import at.jku.se.grip.ui.ApplicationView;
@@ -33,7 +36,6 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 @Theme("grip")
 public class GripUI extends UI {
-	//private Canvas canvas;
 	public static User user;
 	private LoginController loginController = null;
 	private ApplicationController applicationController = null;
@@ -47,8 +49,13 @@ public class GripUI extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 
+		// set the UI size to max
 		setSizeFull();
 		
+		// initialize the grip entity manager with the factory (takes some time to load)
+		GripEntityManager.getInstance();
+		
+		// register this class to the eventbus
 		eventBus = new EventBus();
 		eventBus.register(this);
 		
@@ -63,15 +70,33 @@ public class GripUI extends UI {
 
 	}
 	
-	public static EventBus getEventBus(){
+	/**
+	 * Get the EventBus for the current session.
+	 * 
+	 * @return
+	 */
+	public static EventBus getEventBus() {
 		return eventBus;
+	}
+	
+	/**
+	 * Get the current logged on user.
+	 * 
+	 * @return
+	 */
+	public static User getUser() {
+		return user;
 	}
 	
 	@Subscribe
 	public void listenLogin(LoginEvent event){
-		System.out.println("Event arrived " + event.isValidLogin());
+		System.out.println("Login Event arrived: Login " + (event.isValidLogin() ? "accepted" : "declined."));
 		if(event.isValidLogin()){
 			user = event.getUser();
+			// Test user save
+//			DaoServiceRegistry.getUserDAO().save(user);
+//			User modifiedBy = user.getHeader().getModifiedBy();
+//			String modifiedById = user.getHeader().getModifiedById();
 			switchToApplication();			
 		}
 	}
@@ -88,6 +113,7 @@ public class GripUI extends UI {
 	}
 	
 	private void switchToLogin(){
+		user = null;
 		loginController = new LoginController();
 		setContent(loginController.getView());
 

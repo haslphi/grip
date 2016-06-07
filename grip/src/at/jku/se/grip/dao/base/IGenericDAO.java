@@ -16,7 +16,7 @@ public interface IGenericDAO<T extends GenericEntity<? extends GenericPK>> {
 	
 	List<T> findAll();
 	List<T> findAll(Order order);
-	//List<T> findByCriteria(CriteriaFactory factory);
+	List<T> findByCriteria(CriteriaFactory factory);
 	//Integer countByCriteria(CriteriaFactory factory);
 	
 	T save(T bean);

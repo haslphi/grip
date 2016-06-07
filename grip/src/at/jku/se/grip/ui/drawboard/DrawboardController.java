@@ -1,17 +1,17 @@
 package at.jku.se.grip.ui.drawboard;
 
+import static at.jku.se.grip.common.Constants.VALO_BLUE;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-
 import org.vaadin.hezamu.canvas.Canvas;
 
-import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ClientConnector.AttachEvent;
-import com.vaadin.server.ClientConnector.AttachListener;
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.shared.MouseEventDetails;
+
+import lombok.AllArgsConstructor;
 
 
 public class DrawboardController {
@@ -32,6 +32,9 @@ public class DrawboardController {
 		canvas.addMouseMoveListener(this::canvasMouseMoveListener);
 		canvas.addAttachListener(this::canvasAttachListener);
 		canvas.addDetachListener(this::canvasDetachListener);
+//		canvas.setLineCap("square");
+//		canvas.setLineJoin("round");
+		canvas.setStrokeStyle(VALO_BLUE);
 	}
 	
 	public DrawboardView getView(){
@@ -64,9 +67,8 @@ public class DrawboardController {
 		if(path.size() == 0) {
 			canvas.beginPath();
 			canvas.moveTo(pos.x, pos.y);
-			canvas.setFillStyle("#aaaaff");
+			canvas.setFillStyle("#000000");
 
-			canvas.saveContext();
 			canvas.arc(pos.x, pos.y, 5, 0, 2*Math.PI, true);
 			canvas.fill();
 		} else {

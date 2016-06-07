@@ -9,6 +9,7 @@ import javax.persistence.MappedSuperclass;
 
 import org.apache.commons.lang3.StringUtils;
 
+import at.jku.se.grip.GripUI;
 import at.jku.se.grip.dao.DaoServiceRegistry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,6 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 		return super.isNew() || StringUtils.isBlank(getId().getId());
 	}
 	
-
 	@Override
 	public void preCreate() {
 		setId(new HistoryPK((String) DaoServiceRegistry.provideUuid(), MAX_HISTORY));
@@ -44,8 +44,7 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 			getHeader().setCreatedDate(now);
 		}
 		if(getHeader().getCreatedById() == null){
-			// TODO: set current user
-			//getHeader().setCreatedBy(getUser());
+			getHeader().setCreatedBy(GripUI.getUser());
 		}
 		super.preCreate();
 	}
@@ -54,15 +53,13 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 	public void preUpdate() {
 		Date now = new Date();
 		getHeader().setModifiedDate(now);
-		// TODO: set current user
-		//getHeader().setModifiedBy(getUser());
+		getHeader().setModifiedBy(GripUI.getUser());
 	}
 
 	@Override
 	public void preDelete() {
 		Date now = new Date();
 		getHeader().setFlaggedDeletedDate(now);
-		// TODO: set current user
-		//getHeader().setFlaggedDeletedBy(getUser());
+		getHeader().setFlaggedDeletedBy(GripUI.getUser());
 	}
 }

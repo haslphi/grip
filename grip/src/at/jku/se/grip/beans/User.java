@@ -3,13 +3,14 @@ package at.jku.se.grip.beans;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "GRIP_USER")
+@Table(name = "GRIP_USER", uniqueConstraints={@UniqueConstraint(columnNames = {User.COLUMN_USERNAME , HistoryPK.COLUMN_HISTORY})})
 @Getter
 @Setter
 @NoArgsConstructor

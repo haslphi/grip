@@ -1,10 +1,16 @@
 package at.jku.se.grip.dao.base;
 
+import java.util.List;
+
 import at.jku.se.grip.beans.HistorizableEntity;
+import at.jku.se.grip.common.CriteriaFactory;
 
 public interface IHistorizableDAO<H extends HistorizableEntity> extends IGenericDAO<H> {
 
 	H findById(String uuid);
+	
+	@Override
+	List<H> findByCriteria(CriteriaFactory factory);
 	
 	@Override
 	H save(H bean);
