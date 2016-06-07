@@ -12,6 +12,7 @@ import com.vaadin.ui.Notification;
 import at.jku.se.grip.GripUI;
 import at.jku.se.grip.beans.User;
 import at.jku.se.grip.common.Constants;
+import at.jku.se.grip.common.NotificationPusher;
 import at.jku.se.grip.dao.DaoServiceRegistry;
 import at.jku.se.grip.security.CryptoService;
 import at.jku.se.grip.ui.events.LoginEvent;
@@ -40,7 +41,7 @@ public class LoginController {
 						.getUserDAO()
 						.findByUsernameAndPassword(username, CryptoService.getInstance().encrypt(password, Constants.CRYPTO_KEY));
 			} catch (GeneralSecurityException e) {
-				// TODO Logging and User warning
+				NotificationPusher.showError(Page.getCurrent(), new Exception(), null);
 				e.printStackTrace();
 			}
 		}
@@ -57,9 +58,11 @@ public class LoginController {
 	}
 	
 	private void showLoginDeclinedNotification() {
-		Notification notif = new Notification("User does not exist or username/password is wrong!", Notification.Type.ERROR_MESSAGE);
-		notif.setPosition(Position.BOTTOM_CENTER);
-		notif.show(Page.getCurrent());
-		notif.setDelayMsec(3000);
+		String caption = "User does not exist or username/password is wrong!";
+		NotificationPusher.showCustomError(Page.getCurrent(), null, caption, null);
+//		Notification notif = new Notification("User does not exist or username/password is wrong!", Notification.Type.ERROR_MESSAGE);
+//		notif.setPosition(Position.BOTTOM_CENTER);
+//		notif.show(Page.getCurrent());
+//		notif.setDelayMsec(3000);
 	}
 }

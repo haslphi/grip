@@ -8,13 +8,14 @@ import java.util.List;
 import org.vaadin.hezamu.canvas.Canvas;
 
 import com.vaadin.server.ClientConnector.AttachEvent;
-import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.shared.MouseEventDetails;
 
 import lombok.AllArgsConstructor;
 
 public class DrawboardController {
 
+	private static final String STARTPOINT_COLOR = "#17d2d7";
+	
 	private DrawboardView view = null;
 	private MousePosition currentPos = new MousePosition(0, 0);
 	private Canvas canvas = null;
@@ -30,7 +31,6 @@ public class DrawboardController {
 		canvas.addMouseUpListener(this::canvasMouseUpListener);
 		canvas.addMouseMoveListener(this::canvasMouseMoveListener);
 		canvas.addAttachListener(this::canvasAttachListener);
-		canvas.addDetachListener(this::canvasDetachListener);
 //		canvas.setLineCap("square");
 //		canvas.setLineJoin("round");
 		canvas.setStrokeStyle(VALO_BLUE);
@@ -40,20 +40,35 @@ public class DrawboardController {
 		return view;
 	}
 
+	/**
+	 * Restore the context if component is (re-)attached.
+	 * 
+	 * @param e
+	 */
 	private void canvasAttachListener(AttachEvent e) {
-		if(path.size() > 0) {
-			canvas.saveContext();
+		if (path.size() > 0) {
+			int pos = 0;
+
+			// loses the stroke color if component is detached, therefore we have to restore it
+			canvas.setStrokeStyle(VALO_BLUE);
+			canvas.beginPath();
+			canvas.moveTo(path.get(pos).x, path.get(pos).y);
+			canvas.setFillStyle(STARTPOINT_COLOR);
+
+			canvas.arc(path.get(pos).x, path.get(pos).y, 5, 0, 2 * Math.PI,
+					true);
+			canvas.fill();
+
+			pos++;
+
+			while (pos < path.size()) {
+				canvas.lineTo(path.get(pos).x, path.get(pos).y);
+				canvas.stroke();
+				pos++;
+			}
 		}
-		System.out.println("CANVAS was attached.");
 	}
 	
-	private void canvasDetachListener(DetachEvent e) {
-		if(path.size() > 0) {
-			canvas.restoreContext();
-		}
-		System.out.println("CANVAS was detached.");
-	}
-
 	private void canvasMouseMoveListener(MouseEventDetails e) {
 		// remember current mouse position in canvas
 		currentPos.x = e.getRelativeX();
@@ -66,9 +81,8 @@ public class DrawboardController {
 		if (path.size() == 0) {
 			canvas.beginPath();
 			canvas.moveTo(pos.x, pos.y);
-			canvas.setFillStyle("#000000");
+			canvas.setFillStyle(STARTPOINT_COLOR);
 
-			canvas.saveContext();
 			canvas.arc(pos.x, pos.y, 5, 0, 2 * Math.PI, true);
 			canvas.fill();
 		} else {
