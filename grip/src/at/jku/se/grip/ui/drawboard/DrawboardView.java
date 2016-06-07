@@ -20,49 +20,47 @@ public class DrawboardView extends CustomComponent {
 	private VerticalLayout drawLayout = null;
 	private HorizontalLayout canvasLayout = null;
 	private Label canvasLabel = null;
-    private FormLayout selectMenuFormLayout = null;   
-    private ComboBox selectPathComboBox = null;   
+	private FormLayout selectMenuFormLayout = null;
+	private ComboBox selectPathComboBox = null;
 	private HorizontalLayout selectDeleteButtons = null;
-    private Button selectButton = null;
-    private Button deleteButton = null;
-    private TextField pathName = null;
-	private HorizontalLayout saveCancelButtons = null;
-    private Button saveButton = null;
-    private Button cancelButton = null;
-    private Canvas canvas = null;	
-	
+	private Button selectButton = null;
+	private Button deleteButton = null;
+	private TextField pathName = null;
+	private HorizontalLayout saveClearButtons = null;
+	private Button saveButton = null;
+	private Button clearButton = null;
+	private Canvas canvas = null;
+
 	private VerticalLayout left = null;
-    
-    ContactService service = ContactService.createDemoService();
-	
-	public DrawboardView(){
+
+	ContactService service = ContactService.createDemoService();
+
+	public DrawboardView() {
 		super();
 		init();
 	}
-	
-	private void init(){
+
+	private void init() {
 		this.setCompositionRoot(getMainLayout());
 		this.setSizeFull();
 	}
-	
-	public HorizontalLayout getMainLayout(){
-		if (mainLayout == null){
+
+	public HorizontalLayout getMainLayout() {
+		if (mainLayout == null) {
 			mainLayout = new HorizontalLayout();
 			mainLayout.setSizeFull();
-	
+
 			mainLayout.addComponent(getSelectMenu());
 			mainLayout.addComponent(getDrawLayout());
-			
-//			mainLayout.addComponent(getCanvas());
-			
-	        mainLayout.setExpandRatio(selectMenuFormLayout, 1);
-	        mainLayout.setExpandRatio(drawLayout, 3);
-		}				
+
+			mainLayout.setExpandRatio(selectMenuFormLayout, 1);
+			mainLayout.setExpandRatio(drawLayout, 3);
+		}
 		return mainLayout;
 	}
-	
-	public VerticalLayout getDrawLayout(){
-		if(drawLayout == null){
+
+	public VerticalLayout getDrawLayout() {
+		if (drawLayout == null) {
 			drawLayout = new VerticalLayout();
 			drawLayout.setSizeFull();
 			drawLayout.addComponent(getCanvasLabel());
@@ -71,51 +69,51 @@ public class DrawboardView extends CustomComponent {
 		}
 		return drawLayout;
 	}
-	
-	public HorizontalLayout getCanvasLayout(){
-		if(canvasLayout == null){
+
+	public HorizontalLayout getCanvasLayout() {
+		if (canvasLayout == null) {
 			canvasLayout = new HorizontalLayout();
 			canvasLayout.setWidth("880px");
 			canvasLayout.setHeight("620px");
 			canvasLayout.addComponent(getCanvas());
-			//canvasLayout.addStyleName("well");
+			// canvasLayout.addStyleName("well");
 			canvasLayout.addStyleName("card");
 		}
 		return canvasLayout;
 	}
-	
+
 	public Label getCanvasLabel() {
-		if(canvasLabel == null) {
+		if (canvasLabel == null) {
 			canvasLabel = new Label("Drawboard");
 		}
 		return canvasLabel;
 	}
-	
-	public VerticalLayout getLeft(){
-		if(left == null){
-	        left = new VerticalLayout();
-	        left.setSizeFull();
-	        
+
+	public VerticalLayout getLeft() {
+		if (left == null) {
+			left = new VerticalLayout();
+			left.setSizeFull();
+
 		}
 		return left;
 	}
-	
-	public FormLayout getSelectMenu(){
-		if(selectMenuFormLayout == null) {
+
+	public FormLayout getSelectMenu() {
+		if (selectMenuFormLayout == null) {
 			selectMenuFormLayout = new FormLayout();
 			selectMenuFormLayout.setMargin(true);
-			
-			selectMenuFormLayout.addComponent(getSelectPath());			
+
+			selectMenuFormLayout.addComponent(getSelectPath());
 			selectMenuFormLayout.addComponent(getSelectDeleteButtons());
-			selectMenuFormLayout.addComponent(getPathName());			
+			selectMenuFormLayout.addComponent(getPathName());
 			selectMenuFormLayout.addComponent(getSaveCancelButtons());
 
 		}
 		return selectMenuFormLayout;
 	}
-	
-	private ComboBox getSelectPath(){
-		if(selectPathComboBox == null) {
+
+	private ComboBox getSelectPath() {
+		if (selectPathComboBox == null) {
 			selectPathComboBox = new ComboBox();
 			selectPathComboBox.addStyleName("vertical");
 			selectPathComboBox.setInputPrompt("Select path");
@@ -123,9 +121,8 @@ public class DrawboardView extends CustomComponent {
 		return selectPathComboBox;
 	}
 
-	
-	private HorizontalLayout getSelectDeleteButtons(){
-		if(selectDeleteButtons == null) {
+	private HorizontalLayout getSelectDeleteButtons() {
+		if (selectDeleteButtons == null) {
 			selectDeleteButtons = new HorizontalLayout();
 			selectDeleteButtons.setSpacing(true);
 			selectDeleteButtons.addComponent(getSelectButton());
@@ -133,59 +130,59 @@ public class DrawboardView extends CustomComponent {
 		}
 		return selectDeleteButtons;
 	}
-	
-	private TextField getPathName(){
-		if(pathName == null) {
+
+	private TextField getPathName() {
+		if (pathName == null) {
 			pathName = new TextField();
 			pathName.setInputPrompt("Pathname");
 		}
 		return pathName;
 	}
-	
-	private HorizontalLayout getSaveCancelButtons(){
-		if(saveCancelButtons == null) {
-			saveCancelButtons = new HorizontalLayout();
-			saveCancelButtons.setSpacing(true);
-			saveCancelButtons.addComponent(getSaveButton());
-			saveCancelButtons.addComponent(getCancelButton());
+
+	private HorizontalLayout getSaveCancelButtons() {
+		if (saveClearButtons == null) {
+			saveClearButtons = new HorizontalLayout();
+			saveClearButtons.setSpacing(true);
+			saveClearButtons.addComponent(getSaveButton());
+			saveClearButtons.addComponent(getClearButton());
 		}
-		return saveCancelButtons;
+		return saveClearButtons;
 	}
-	
-	private Button getSaveButton(){
-		if(saveButton == null) {
+
+	private Button getSaveButton() {
+		if (saveButton == null) {
 			saveButton = new Button("Save");
 		}
 		return saveButton;
-	}	
-	
-	private Button getSelectButton(){
-		if(selectButton == null) {
+	}
+
+	private Button getSelectButton() {
+		if (selectButton == null) {
 			selectButton = new Button("Select");
 		}
 		return selectButton;
 	}
-	
-	private Button getDeleteButton(){
-		if(deleteButton == null) {
+
+	private Button getDeleteButton() {
+		if (deleteButton == null) {
 			deleteButton = new Button("Delete");
 		}
 		return deleteButton;
-	}	
-	
-	private Button getCancelButton(){
-		if(cancelButton == null) {
-			cancelButton = new Button("Cancel");
-		}
-		return cancelButton;
 	}
-	
-	public Canvas getCanvas(){
-		if(canvas == null) {
+
+	private Button getClearButton() {
+		if (clearButton == null) {
+			clearButton = new Button("Clear");
+		}
+		return clearButton;
+	}
+
+	public Canvas getCanvas() {
+		if (canvas == null) {
 			canvas = new Canvas();
 			canvas.setSizeFull();
 		}
 		return canvas;
 	}
-	
+
 }

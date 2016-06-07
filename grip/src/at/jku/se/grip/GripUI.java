@@ -33,14 +33,14 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 @Theme("grip")
 public class GripUI extends UI {
-	//private Canvas canvas;
+	// private Canvas canvas;
 	public static User user;
 	private LoginController loginController = null;
 	private ApplicationController applicationController = null;
 	private static EventBus eventBus = null;
 
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = GripUI.class, widgetset="at.jku.se.grip.widgetset.GripWidgetset")
+	@VaadinServletConfiguration(productionMode = false, ui = GripUI.class, widgetset = "at.jku.se.grip.widgetset.GripWidgetset")
 	public static class Servlet extends VaadinServlet {
 	}
 
@@ -48,87 +48,88 @@ public class GripUI extends UI {
 	protected void init(VaadinRequest request) {
 
 		setSizeFull();
-		
+
 		eventBus = new EventBus();
 		eventBus.register(this);
-		
-		//LoginEvent x = new LoginEvent(true);
-		//eventBus.post(x);
-		
+
+		// LoginEvent x = new LoginEvent(true);
+		// eventBus.post(x);
+
 		switchToLogin();
-		
-		//testing(view);
-		
-		//testUserView();
+
+		// testing(view);
+
+		// testUserView();
 
 	}
-	
-	public static EventBus getEventBus(){
+
+	public static EventBus getEventBus() {
 		return eventBus;
 	}
-	
+
 	@Subscribe
-	public void listenLogin(LoginEvent event){
+	public void listenLogin(LoginEvent event) {
 		System.out.println("Event arrived " + event.isValidLogin());
-		if(event.isValidLogin()){
+		if (event.isValidLogin()) {
 			user = event.getUser();
-			switchToApplication();			
+			switchToApplication();
 		}
 	}
-	
+
 	@Subscribe
-	public void listenLogout(LogoutEvent event){
-		switchToLogin();	
+	public void listenLogout(LogoutEvent event) {
+		switchToLogin();
 	}
-	
-	private void switchToApplication(){
+
+	private void switchToApplication() {
 		applicationController = new ApplicationController();
 		setContent(applicationController.getView());
 		loginController = null;
 	}
-	
-	private void switchToLogin(){
+
+	private void switchToLogin() {
 		loginController = new LoginController();
 		setContent(loginController.getView());
 
 		applicationController = null;
 	}
-	
-	private void testUserView(){
-		UsersController usersController= new UsersController();
+
+	private void testUserView() {
+		UsersController usersController = new UsersController();
 		setContent(usersController.getView());
 	}
-	
+
 	public static void testing(ApplicationView view) {
 		MTable<User> userTable = new MTable<User>();
-		
-		//userTable.setBeans(populatePersonTable());
+
+		// userTable.setBeans(populatePersonTable());
 		List<User> users = getUserByDAO();
 		userTable.setBeans(users);
-		
+
 		view.getMainComponentContainer().addComponent(userTable);
 	}
-	
+
 	private static List<User> getUserByDAO() {
 		UserDAO userDao = new UserDAO();
 		return userDao.findAll();
 	}
-	
-	private  static List<User> populatePersonTable() {
+
+	private static List<User> populatePersonTable() {
 		List<User> result = new ArrayList<>();
 		EntityManagerFactory factory;
-		factory = Persistence.createEntityManagerFactory(Constants.DEFAULT_PERSISTENCE_IDENTIFIER);
+		factory = Persistence
+				.createEntityManagerFactory(Constants.DEFAULT_PERSISTENCE_IDENTIFIER);
 		EntityManager em = factory.createEntityManager();
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<User> cq = cb.createQuery(User.class);
-		//Root<User> root = cq.from(User.class);
-		//cq.where(cb.like(root.get("id.id"), "2345"));
+		// Root<User> root = cq.from(User.class);
+		// cq.where(cb.like(root.get("id.id"), "2345"));
 		cq.where();
 		TypedQuery<User> query = em.createQuery(cq);
 
 		result = query.getResultList();
-		if(!result.isEmpty()) {
+		if (!result.isEmpty()) {
 			User user = result.get(0);
 			user.setPassword("testPwd2");
 
@@ -137,7 +138,7 @@ public class GripUI extends UI {
 				em.merge(user);
 				em.getTransaction().commit();
 			} catch (Exception e) {
-				if(em.getTransaction().isActive()) {
+				if (em.getTransaction().isActive()) {
 					em.getTransaction().rollback();
 				}
 				e.printStackTrace();
