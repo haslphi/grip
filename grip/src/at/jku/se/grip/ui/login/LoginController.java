@@ -17,19 +17,19 @@ import at.jku.se.grip.security.CryptoService;
 import at.jku.se.grip.ui.events.LoginEvent;
 
 public class LoginController {
-	
+
 	private LoginView view = null;
-	
-	public LoginController(){
+
+	public LoginController() {
 		view = new LoginView();
 		init();
 	}
 
-	private void init(){
+	private void init() {
 		view.getSignInButton().addClickListener(this::signIn);
 	}
-	
-	private void signIn (Button.ClickEvent event) {
+
+	private void signIn(Button.ClickEvent event) {
 		String username = view.getUsernameTextField().getValue();
 		String password = view.getPasswordPasswordField().getValue();
 		User user = null;
@@ -51,8 +51,8 @@ public class LoginController {
 			GripUI.getEventBus().post(new LoginEvent(false, null));			
 		}
 	}
-	
-	public LoginView getView(){
+
+	public LoginView getView() {
 		return view;
 	}
 	
@@ -62,5 +62,4 @@ public class LoginController {
 		notif.show(Page.getCurrent());
 		notif.setDelayMsec(3000);
 	}
-	
 }
