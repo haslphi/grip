@@ -52,8 +52,8 @@ public class Header implements Serializable {
 	})
 	private User createdBy;
 	
-	@Column(name = COLUMN_CREATED_BY_ID, length = 32, insertable = false, updatable = false)
-	private String createdById;
+	//@Column(name = COLUMN_CREATED_BY_ID, length = 32, insertable = false, updatable = false)
+	//private String createdById;
 
 	// foreign key name cannot be defined, because its used in more objects -> multiple constraint names
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -63,8 +63,8 @@ public class Header implements Serializable {
 	})
 	private User modifiedBy;
 
-	@Column(name = COLUMN_MODIFIED_BY_ID, length = 32, insertable = false, updatable = false)
-	private String modifiedById;
+	//@Column(name = COLUMN_MODIFIED_BY_ID, length = 32, insertable = false, updatable = false)
+	//private String modifiedById;
 
 	// foreign key name cannot be defined, because its used in more objects -> multiple constraint names
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -74,6 +74,6 @@ public class Header implements Serializable {
 	})
 	private User flaggedDeletedBy;
 
-	@Column(name = COLUMN_FLAGGED_DELETED_BY_ID, length = 32, insertable = false, updatable = false)
-	private String flaggedDeletedById;
+	//@Column(name = COLUMN_FLAGGED_DELETED_BY_ID, length = 32, insertable = false, updatable = false)
+	//private String flaggedDeletedById;
 }
