@@ -107,7 +107,7 @@ public class CriteriaFactory {
 			
 			switch (type) {
 			case LIKE:
-				andPredicates.add(cb.like(pContainer.p.get(pContainer.finalField), addWildcard(entry.getValue().toString())));
+				andPredicates.add(cb.like(cb.lower(pContainer.p.get(pContainer.finalField)), addWildcard(entry.getValue().toString().toLowerCase())));
 				break;
 			case EQUALS:
 				andPredicates.add(cb.equal(pContainer.p.get(pContainer.finalField), entry.getValue()));
@@ -129,7 +129,7 @@ public class CriteriaFactory {
 			
 			switch (type) {
 			case LIKE:
-				orPredicates.add(cb.like(pContainer.p.get(pContainer.finalField), addWildcard(entry.getValue().toString())));
+				orPredicates.add(cb.like(cb.lower(pContainer.p.get(pContainer.finalField)), addWildcard(entry.getValue().toString().toLowerCase())));
 				break;
 			case EQUALS:
 				orPredicates.add(cb.equal(pContainer.p.get(pContainer.finalField), entry.getValue()));

@@ -1,7 +1,5 @@
 package at.jku.se.grip.ui.users;
 
-import at.jku.se.grip.backend.Contact;
-
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -10,18 +8,20 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import at.jku.se.grip.beans.User;
+
 @SuppressWarnings("serial")
-public class UsersView extends CustomComponent {
+public class UserView extends CustomComponent {
 
 	private HorizontalLayout mainLayout = null;
 	private HorizontalLayout actions = null;
 	private VerticalLayout left = null;
 	private TextField filter = null;
-	private Grid contactList = null;
-	private Button newContact = null;
-    private ContactForm contactForm = null;
+	private Grid userList = null;
+	private Button newUser = null;
+    private UserForm userForm = null;
 	
-	public UsersView(){
+	public UserView(){
 		super();
 		init();
 	}
@@ -37,9 +37,9 @@ public class UsersView extends CustomComponent {
 			mainLayout.setSizeFull();
 			
 			mainLayout.addComponent(getLeft());
-			mainLayout.addComponent(getContactForm());
-	        mainLayout.setExpandRatio(left, 5);
-	        mainLayout.setExpandRatio(contactForm, 1);
+			mainLayout.addComponent(getUserForm());
+	        mainLayout.setExpandRatio(left, 2.5f);
+	        mainLayout.setExpandRatio(userForm, 1);
 		}				
 		return mainLayout;
 	}
@@ -50,9 +50,9 @@ public class UsersView extends CustomComponent {
 	        left.setSizeFull();
 	        
 	        left.addComponent(getActions());
-	        left.addComponent(getContactList());
+	        left.addComponent(getUserList());
 	        
-	        left.setExpandRatio(contactList, 1);
+	        left.setExpandRatio(userList, 1);
 		}
 		return left;
 	}
@@ -63,7 +63,7 @@ public class UsersView extends CustomComponent {
 	        actions.setWidth("100%");
 	        
 	        actions.addComponent(getFilter());
-	        actions.addComponent(getNewContactButton());	        
+	        actions.addComponent(getNewUserButton());	        
 	        
 	        actions.setExpandRatio(filter, 1);	        
 		}
@@ -79,33 +79,36 @@ public class UsersView extends CustomComponent {
 		return filter;
 	}
 	
-	public Button getNewContactButton(){
-		if(newContact == null) {
-			newContact = new Button("New contact");
+	public Button getNewUserButton(){
+		if(newUser == null) {
+			newUser = new Button("New contact");
 		}
-		return newContact;
+		return newUser;
 	}
 	
-	public ContactForm getContactForm(){
-		if(contactForm == null) {
-			contactForm = new ContactForm();
+	public UserForm getUserForm(){
+		if(userForm == null) {
+			userForm = new UserForm();
 		}
-		return contactForm;
+		return userForm;
 	}
 	
-	public Grid getContactList(){
-		if(contactList == null) {
-			contactList = new Grid();
-			contactList.setSizeFull();
+	public Grid getUserList(){
+		if(userList == null) {
+			userList = new Grid();
+			userList.setSizeFull();
 			
-	        contactList.setContainerDataSource(new BeanItemContainer<>(Contact.class));
-	        contactList.setColumnOrder("firstName", "lastName", "email");
-	        contactList.removeColumn("id");
-	        contactList.removeColumn("birthDate");
-	        contactList.removeColumn("phone");
-	        contactList.setSelectionMode(Grid.SelectionMode.SINGLE);
+	        userList.setContainerDataSource(new BeanItemContainer<>(User.class));
+	        userList.removeAllColumns();
+	        userList.addColumn("firstName");
+	        userList.addColumn("lastName");
+	        userList.addColumn("username");
+	        userList.addColumn("email");
+	        userList.setColumnOrder("firstName", "lastName", "username", "email");
+	        
+	        userList.setSelectionMode(Grid.SelectionMode.SINGLE);
 		}
-		return contactList;
+		return userList;
 	}
 	
 }

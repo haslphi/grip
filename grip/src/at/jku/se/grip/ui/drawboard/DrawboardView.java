@@ -2,8 +2,7 @@ package at.jku.se.grip.ui.drawboard;
 
 import org.vaadin.hezamu.canvas.Canvas;
 
-import at.jku.se.grip.backend.ContactService;
-
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
@@ -12,6 +11,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+
+import at.jku.se.grip.backend.ContactService;
 
 @SuppressWarnings("serial")
 public class DrawboardView extends CustomComponent {
@@ -76,7 +78,6 @@ public class DrawboardView extends CustomComponent {
 			canvasLayout.setWidth("880px");
 			canvasLayout.setHeight("620px");
 			canvasLayout.addComponent(getCanvas());
-			// canvasLayout.addStyleName("well");
 			canvasLayout.addStyleName("card");
 		}
 		return canvasLayout;
@@ -85,6 +86,8 @@ public class DrawboardView extends CustomComponent {
 	public Label getCanvasLabel() {
 		if (canvasLabel == null) {
 			canvasLabel = new Label("Drawboard");
+			canvasLabel.setIcon(FontAwesome.DASHBOARD);
+			canvasLabel.addStyleName(ValoTheme.LABEL_BOLD);
 		}
 		return canvasLabel;
 	}

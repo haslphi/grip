@@ -1,16 +1,18 @@
 package at.jku.se.grip.ui;
 
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+
 import at.jku.se.grip.GripUI;
 import at.jku.se.grip.ui.drawboard.DrawboardController;
 import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.overview.OverviewController;
-import at.jku.se.grip.ui.users.UsersController;
-
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
+import at.jku.se.grip.ui.robots.RobotController;
+import at.jku.se.grip.ui.users.UserController;
 
 public class ApplicationController {
-	private UsersController usersController = null;
+	private UserController usersController = null;
+	private RobotController robotController = null;
 	private DrawboardController drawboardController = null; 
 	private OverviewController overviewController = null;
 	private Component actComponent = null; 
@@ -26,6 +28,7 @@ public class ApplicationController {
 		switchToOverview();
 		view.getNavigatorView().getOverviewButton().addClickListener(this::overview);
 		view.getNavigatorView().getDrawboardButton().addClickListener(this::drawboard);
+		view.getNavigatorView().getRobotsButton().addClickListener(this::robots);
 		view.getNavigatorView().getUsersButton().addClickListener(this::users);
 		view.getNavigatorView().getSignOutButton().addClickListener(this::signOut);
 	}
@@ -38,6 +41,10 @@ public class ApplicationController {
 		switchToDrawboard();
 	}
 	
+	private void robots(Button.ClickEvent event) {
+		switchToRobots();
+	}
+	
 	private void users (Button.ClickEvent event){
 		switchToUsers();
 	}
@@ -47,10 +54,10 @@ public class ApplicationController {
 	}
 	
 	private void switchToOverview(){
-		if(overviewController==null){
+		if(overviewController == null){
 			overviewController = new OverviewController();			
 		}
-		if(actComponent!=null){
+		if(actComponent != null){
 			view.removeComponent(actComponent);
 		}
 		actComponent = overviewController.getView();
@@ -59,10 +66,10 @@ public class ApplicationController {
 	}
 	
 	private void switchToDrawboard(){
-		if(drawboardController==null){
+		if(drawboardController == null){
 			drawboardController = new DrawboardController();			
 		}
-		if(actComponent!=null){
+		if(actComponent != null){
 			view.removeComponent(actComponent);
 		}
 		actComponent = drawboardController.getView();
@@ -70,11 +77,23 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
-	private void switchToUsers(){
-		if(usersController==null){
-			usersController = new UsersController();			
+	private void switchToRobots(){
+		if(robotController == null){
+			robotController = new RobotController();			
 		}
-		if(actComponent!=null){
+		if(actComponent != null){
+			view.removeComponent(actComponent);
+		}
+		actComponent = robotController.getView();
+		view.addComponent(actComponent);
+		view.setExpandRatio(actComponent, 1.0f);
+	}
+	
+	private void switchToUsers(){
+		if(usersController == null){
+			usersController = new UserController();			
+		}
+		if(actComponent != null){
 			view.removeComponent(actComponent);
 		}
 		actComponent = usersController.getView();

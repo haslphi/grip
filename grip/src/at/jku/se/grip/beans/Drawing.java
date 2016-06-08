@@ -22,6 +22,10 @@ public class Drawing extends HistorizableEntity {
 	private static final long serialVersionUID = 2245864364629429145L;
 
 	private static final String COLUMN_JASON_PATH = "JSON_PATH";
+	private static final String COLUMN_NAME = "NAME";
+	
+	@Column(name = COLUMN_NAME)
+	private String name;
 	
 	@Column(name = COLUMN_JASON_PATH)
 	@Lob
