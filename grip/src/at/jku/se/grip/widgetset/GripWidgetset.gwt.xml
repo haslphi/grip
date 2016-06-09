@@ -26,4 +26,6 @@
     <inherits name="org.vaadin.hezamu.canvas.CanvasWidgetset" />
 
     <inherits name="com.ejt.vaadin.loginform.WidgetSet" />
+
+    <inherits name="org.dussan.vaadin.dcharts.DchartsWidgetset" />
 </module>

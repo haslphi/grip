@@ -1,19 +1,16 @@
 package at.jku.se.grip.ui.overview;
 
-import javafx.scene.paint.Color;
-
 import org.vaadin.hezamu.canvas.Canvas;
-
-import at.jku.se.grip.backend.ContactService;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+
+import at.jku.se.grip.backend.ContactService;
 
 @SuppressWarnings("serial")
 public class OverviewView extends CustomComponent {
@@ -64,9 +61,9 @@ public class OverviewView extends CustomComponent {
 	public HorizontalLayout getCanvasLayout(){
 		if(canvasLayout == null){
 			canvasLayout = new HorizontalLayout();
-			canvasLayout.setWidth("880px");
-			canvasLayout.setHeight("660px");
-			canvasLayout.addComponent(getCanvas());
+			canvasLayout.setWidth("440px");
+			canvasLayout.setHeight("330px");
+			//canvasLayout.addComponent(getCanvas());
 			//canvasLayout.addStyleName("well");
 			canvasLayout.addStyleName("card");
 		}
