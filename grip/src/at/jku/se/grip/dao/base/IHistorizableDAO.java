@@ -9,6 +9,8 @@ public interface IHistorizableDAO<H extends HistorizableEntity> extends IGeneric
 
 	H findById(String uuid);
 	
+	List<H> findAllWithoutHistory();
+	
 	@Override
 	List<H> findByCriteria(CriteriaFactory factory);
 	

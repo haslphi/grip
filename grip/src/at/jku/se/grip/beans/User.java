@@ -13,12 +13,14 @@ import at.jku.se.grip.security.CryptoService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "GRIP_USER", uniqueConstraints={@UniqueConstraint(columnNames = {User.COLUMN_USERNAME , HistoryPK.COLUMN_HISTORY})})
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString(exclude = {"passwordDecrypted", "password"})
 public class User extends HistorizableEntity {
 	
 	/**

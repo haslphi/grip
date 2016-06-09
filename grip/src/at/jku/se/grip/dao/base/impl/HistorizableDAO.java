@@ -30,6 +30,13 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 	}
 	
 	@Override
+	public List<H> findAllWithoutHistory() {
+		return super.findByCriteria(CriteriaFactory.create()
+				.andIsNull("header.flaggedDeletedDate")
+				.andEquals("id.history", MAX_HISTORY));
+	}
+	
+	@Override
 	public List<H> findByCriteria(CriteriaFactory factory) {
 		factory.andIsNull("header.flaggedDeletedDate").andEquals("id.history", MAX_HISTORY);
 		return super.findByCriteria(factory);
