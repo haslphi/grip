@@ -5,21 +5,24 @@ import static at.jku.se.grip.common.Constants.VALO_BLUE;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.vaadin.hezamu.canvas.Canvas;
 
 import com.vaadin.server.ClientConnector.AttachEvent;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.ui.Button;
 
 import lombok.AllArgsConstructor;
 
 public class DrawboardController {
 
 	private static final String STARTPOINT_COLOR = "#17d2d7";
-	
+
 	private DrawboardView view = null;
 	private MousePosition currentPos = new MousePosition(0, 0);
 	private Canvas canvas = null;
 	private List<MousePosition> path = new ArrayList<>();
+	private JSONArray pathJason = new JSONArray();
 
 	public DrawboardController() {
 		view = new DrawboardView();
@@ -31,9 +34,21 @@ public class DrawboardController {
 		canvas.addMouseUpListener(this::canvasMouseUpListener);
 		canvas.addMouseMoveListener(this::canvasMouseMoveListener);
 		canvas.addAttachListener(this::canvasAttachListener);
-//		canvas.setLineCap("square");
-//		canvas.setLineJoin("round");
+		// canvas.setLineCap("square");
+		// canvas.setLineJoin("round");
 		canvas.setStrokeStyle(VALO_BLUE);
+		view.getSaveButton().addClickListener(this::saveListener);
+	}
+
+	private void saveListener(Button.ClickEvent e) {
+		pathJason.clear();
+		canvasToJson();
+
+		if (pathJason.isEmpty()) {
+			System.out.print("pathJason = Empty" + "\n");
+		} else {
+			System.out.print(pathJason + "\n");
+		}
 	}
 
 	public DrawboardView getView() {
@@ -49,7 +64,8 @@ public class DrawboardController {
 		if (path.size() > 0) {
 			int pos = 0;
 
-			// loses the stroke color if component is detached, therefore we have to restore it
+			// loses the stroke color if component is detached, therefore we
+			// have to restore it
 			canvas.setStrokeStyle(VALO_BLUE);
 			canvas.beginPath();
 			canvas.moveTo(path.get(pos).x, path.get(pos).y);
@@ -68,7 +84,7 @@ public class DrawboardController {
 			}
 		}
 	}
-	
+
 	private void canvasMouseMoveListener(MouseEventDetails e) {
 		// remember current mouse position in canvas
 		currentPos.x = e.getRelativeX();
@@ -114,5 +130,58 @@ public class DrawboardController {
 	private class MousePosition {
 		protected int x = 0;
 		protected int y = 0;
+	}
+
+	private void canvasToJson() {
+		double xOld = path.get(0).x;
+		double yOld = 660 - path.get(0).y;
+		double xNew = path.get(0).x;
+		double yNew = 660 - path.get(0).y;
+		double distance = 0;
+		double orientationOld = 0;
+		double orientationNew = 0;
+		double turn = 0;
+
+		for (int i = 1; i < path.size(); i++) {
+			orientationOld = orientationNew;
+			xOld = xNew;
+			yOld = yNew;
+			xNew = path.get(i).x;
+			yNew = 660 - path.get(i).y;
+
+			// The difference between old orientation and new orientation is the
+			// turn to make
+			orientationNew = Math.toDegrees(Math
+					.atan2(yNew - yOld, xNew - xOld));
+			if (orientationNew < 0) {
+				orientationNew = orientationNew + 360;
+			}
+
+			// depanding on the shortest degrees the roboter should turn left or
+			// right
+			if (orientationNew >= orientationOld) {
+				turn = orientationNew - orientationOld;
+				if (turn > 180) {
+					turn = (360 - turn) * -1;
+				}
+			} else {
+				turn = (orientationOld - orientationNew) * -1;
+				if (turn < -180) {
+					turn = turn + 360;
+				}
+			}
+			pathJason.add((int) Math.round(turn));
+
+			// The pixels between old postion and new position are the distance
+			// to drive
+			distance = Math.round(Math.sqrt(Math.pow(xNew - xOld, 2)
+					+ Math.pow(yNew - yOld, 2)));
+			distance = Math.round(distance);
+			pathJason.add((int) Math.round(distance * 0.25));
+
+			// System.out.print("turn: " + turn + "\n");
+			// System.out.print("distance: " + (int) distance + "\n");
+		}
+
 	}
 }

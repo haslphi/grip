@@ -149,7 +149,7 @@ public class DrawboardView extends CustomComponent {
 		return saveClearButtons;
 	}
 
-	private Button getSaveButton() {
+	public Button getSaveButton() {
 		if (saveButton == null) {
 			saveButton = new Button("Save");
 		}

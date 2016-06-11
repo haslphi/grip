@@ -51,6 +51,8 @@ public class LoginController {
 			showLoginDeclinedNotification();
 			GripUI.getEventBus().post(new LoginEvent(false, null));			
 		}
+//		GripUI.getEventBus().post(new LoginEvent(true, user));	
+		
 	}
 
 	public LoginView getView() {
