@@ -43,9 +43,7 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 			Date now = new Date();
 			getHeader().setCreatedDate(now);
 		}
-		if(getHeader().getCreatedById() == null){
-			getHeader().setCreatedBy(GripUI.getUser());
-		}
+		getHeader().setCreatedBy(GripUI.getUser());
 		super.preCreate();
 	}
 
@@ -54,6 +52,7 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 		Date now = new Date();
 		getHeader().setModifiedDate(now);
 		getHeader().setModifiedBy(GripUI.getUser());
+		super.preUpdate();
 	}
 
 	@Override
@@ -61,5 +60,6 @@ public abstract class HistorizableEntity extends VersionableEntity<HistoryPK> {
 		Date now = new Date();
 		getHeader().setFlaggedDeletedDate(now);
 		getHeader().setFlaggedDeletedBy(GripUI.getUser());
+		super.preDelete();
 	}
 }

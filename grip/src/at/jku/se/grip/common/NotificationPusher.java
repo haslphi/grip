@@ -32,8 +32,8 @@ public class NotificationPusher {
 				Notification.Type.ERROR_MESSAGE,
 				true);
 		notif.setPosition(Position.BOTTOM_CENTER);
-		notif.show(current);
 		notif.setDelayMsec(-1);
+		notif.show(current);
 	}
 	
 	/**
@@ -51,8 +51,19 @@ public class NotificationPusher {
 				error,
 				Notification.Type.ERROR_MESSAGE);
 		notif.setPosition(Position.BOTTOM_CENTER);
-		notif.show(current);
 		notif.setDelayMsec(delay != null ? delay : DEFAULT_CUSTOM_ERROR_DELAY);
+		notif.show(current);
+	}
+	
+	/**
+	 * Show a generic notification validation message.
+	 * 
+	 * @param current on which page to show the notification
+	 */
+	public static void showValidationViolatedNotification(Page current) {
+		Notification notif = new Notification("Validation violated!", Notification.Type.TRAY_NOTIFICATION);
+		notif.setPosition(Position.BOTTOM_RIGHT);
+		notif.show(current);
 	}
 
 }

@@ -30,7 +30,7 @@ import at.jku.se.grip.ui.ApplicationView;
 import at.jku.se.grip.ui.events.LoginEvent;
 import at.jku.se.grip.ui.events.LogoutEvent;
 import at.jku.se.grip.ui.login.LoginController;
-import at.jku.se.grip.ui.users.UsersController;
+import at.jku.se.grip.ui.users.UserController;
 
 @SuppressWarnings("serial")
 @Theme("grip")
@@ -120,7 +120,7 @@ public class GripUI extends UI {
 	}
 
 	private void testUserView() {
-		UsersController usersController = new UsersController();
+		UserController usersController = new UserController();
 		setContent(usersController.getView());
 	}
 

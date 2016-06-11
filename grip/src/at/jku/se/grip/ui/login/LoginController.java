@@ -5,9 +5,7 @@ import java.security.GeneralSecurityException;
 import org.apache.commons.lang3.StringUtils;
 
 import com.vaadin.server.Page;
-import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Notification;
 
 import at.jku.se.grip.GripUI;
 import at.jku.se.grip.beans.User;
@@ -62,9 +60,5 @@ public class LoginController {
 	private void showLoginDeclinedNotification() {
 		String caption = "User does not exist or username/password is wrong!";
 		NotificationPusher.showCustomError(Page.getCurrent(), null, caption, null);
-//		Notification notif = new Notification("User does not exist or username/password is wrong!", Notification.Type.ERROR_MESSAGE);
-//		notif.setPosition(Position.BOTTOM_CENTER);
-//		notif.show(Page.getCurrent());
-//		notif.setDelayMsec(3000);
 	}
 }

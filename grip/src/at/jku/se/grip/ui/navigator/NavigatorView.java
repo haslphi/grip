@@ -37,7 +37,6 @@ public class NavigatorView extends CustomComponent {
 		this.addStyleName(ValoTheme.MENU_ROOT);
 		this.setSizeUndefined();
 		this.setId(ID);
-		this.setSizeUndefined();
 		this.setCompositionRoot(getMenuVerticalLayout());
 	}
 	
@@ -97,7 +96,6 @@ public class NavigatorView extends CustomComponent {
 			overviewButton.setIcon(FontAwesome.HOME);
 			overviewButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			overviewButton.setCaption("Overview");
-			overviewButton.setDescription("Switch to home screen.");
 			overviewButton.setSizeUndefined();
 			overviewButton.setWidth(BUTTON_WIDTH);
 		}
@@ -110,7 +108,6 @@ public class NavigatorView extends CustomComponent {
 			drawboardButton.setIcon(FontAwesome.PENCIL);
 			drawboardButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			drawboardButton.setCaption("Drawboard");
-			drawboardButton.setDescription("Switch to the drawboard.");
 			drawboardButton.setSizeUndefined();
 			drawboardButton.setWidth(BUTTON_WIDTH);
 		}
@@ -123,7 +120,6 @@ public class NavigatorView extends CustomComponent {
 			robotsButton.setIcon(FontAwesome.GEARS);
 			robotsButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			robotsButton.setCaption("Robots");
-			robotsButton.setDescription("Edit robots.");
 			robotsButton.setSizeUndefined();
 			robotsButton.setWidth(BUTTON_WIDTH);
 		}
@@ -136,7 +132,6 @@ public class NavigatorView extends CustomComponent {
 			usersButton.setIcon(FontAwesome.USERS);
 			usersButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			usersButton.setCaption("Users");
-			usersButton.setDescription("Edit users.");
 			usersButton.setSizeUndefined();
 			usersButton.setWidth(BUTTON_WIDTH);
 		}
@@ -149,7 +144,6 @@ public class NavigatorView extends CustomComponent {
 			signOutButton.setIcon(FontAwesome.SIGN_OUT);
 			signOutButton.setPrimaryStyleName(ValoTheme.MENU_ITEM);
 			signOutButton.setCaption("Sing Out");
-			signOutButton.setDescription("Sign out.");
 			signOutButton.setSizeUndefined();
 			signOutButton.setWidth(BUTTON_WIDTH);
 		}

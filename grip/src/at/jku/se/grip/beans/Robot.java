@@ -4,8 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
 @Table(name = "ROBOT")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString(exclude = "description")
 public class Robot extends HistorizableEntity {
 	
 	/**

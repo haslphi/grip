@@ -31,7 +31,6 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 		} catch (EntityNotFoundException e) {
 			return null;
 		} catch (Exception e) {
-			//throw wrapSQLErrorToCASError(e);
 			getEM().clear();
 			throw e;
 		} finally {
@@ -111,7 +110,6 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 				getEM().persist(bean);
 				getEM().flush();
 			} else if (UpdateType.UPDATE.equals(type)) {
-				//bean = getEM().merge(bean);
 				T savedBean = getEM().merge(bean);
 				getEM().flush();
 				bean = savedBean;
@@ -123,19 +121,15 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 		} catch (EntityExistsException e) {
 			rollbackTransaction();
 			throw e;
-			//throw wrapSQLErrorToCASError(e);
 		} catch (TransactionRolledbackException e) {
 		} catch (Exception e) {
 			rollbackTransaction();
-			//throw wrapSQLErrorToCASError(e);
 			throw e;
 		}
 		finally {
 			closeSession();
 		}
 
-		//sw.stop();
-		//LogUtilities.log().info("{0}({1}): merge execution time: {2}", getType(), bean.getId(), sw.getTime());
 		return bean;
 	}
 	

@@ -30,6 +30,13 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 	}
 	
 	@Override
+	public List<H> findAllWithoutHistory() {
+		return super.findByCriteria(CriteriaFactory.create()
+				.andIsNull("header.flaggedDeletedDate")
+				.andEquals("id.history", MAX_HISTORY));
+	}
+	
+	@Override
 	public List<H> findByCriteria(CriteriaFactory factory) {
 		factory.andIsNull("header.flaggedDeletedDate").andEquals("id.history", MAX_HISTORY);
 		return super.findByCriteria(factory);
@@ -50,9 +57,6 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 		try {
 			if (!bean.isNew()) {
 				current = findInEM(getType(), bean.getId());
-				/*if(current != null) {
-					getEM().getSession().evict(current); // detach current object from session, so modifications won't be saved automatically on flush
-				}*/
 			}
 
 			if (bean.isNew()) {
@@ -91,7 +95,6 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 			try {
 				throw e;
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		} finally {
@@ -116,7 +119,6 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 			try {
 				throw e;
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
