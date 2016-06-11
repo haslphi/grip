@@ -1,20 +1,25 @@
 package at.jku.se.grip.ui.overview;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import org.dussan.vaadin.dcharts.DCharts;
 import org.dussan.vaadin.dcharts.base.elements.PointLabels;
 import org.dussan.vaadin.dcharts.base.elements.XYaxis;
 import org.dussan.vaadin.dcharts.data.DataSeries;
-import org.dussan.vaadin.dcharts.data.Ticks;
 import org.dussan.vaadin.dcharts.metadata.XYaxes;
 import org.dussan.vaadin.dcharts.metadata.directions.BarDirections;
 import org.dussan.vaadin.dcharts.metadata.locations.PointLabelLocations;
 import org.dussan.vaadin.dcharts.metadata.renderers.AxisRenderers;
 import org.dussan.vaadin.dcharts.metadata.renderers.SeriesRenderers;
 import org.dussan.vaadin.dcharts.options.Axes;
-import org.dussan.vaadin.dcharts.options.Highlighter;
 import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.series.BarRenderer;
+
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
+import com.vaadin.ui.BrowserFrame;
 
 public class OverviewController {
 	
@@ -119,7 +124,26 @@ public class OverviewController {
 			.setDataSeries(dataSeries)
 			.setOptions(options)
 			.show();
-		getView().getCanvasLayout().addComponent(chart);
+		//getView().getCanvasLayout().addComponent(chart);
+		
+		/*------------------------------------*/
+		
+		BrowserFrame frame = new BrowserFrame();
+		frame.setWidth("1000px");
+		frame.setHeight("600px");
+		frame.setSource(new StreamResource(new ChartStreamSource(), "chart"));
+		getView().getCanvasLayout().addComponent(frame);
+
+	}
+	
+	private static class ChartStreamSource implements StreamSource {
+
+		private static final byte[] HTML = "<html><head><script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script><script type=\"text/javascript\">google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});google.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([['Age', 'Weight'],[ 8,      12],[ 4,      5.5],[ 11,     14],[ 4,      5],[ 3,      3.5],[ 6.5,    7]]);var options = {title: 'Age vs. Weight comparison',hAxis: {title: 'Age', minValue: 0, maxValue: 15},vAxis: {title: 'Weight', minValue: 0, maxValue: 15},legend: 'none'};var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));chart.draw(data, options);}</script></head><body><div id=\"chart_div\" style=\"width: 900px; height: 500px;\"></div></body></html>".getBytes();
+
+		public InputStream getStream() {
+			return new ByteArrayInputStream(HTML);
+		}
+
 	}
 	
 	public OverviewView getView(){

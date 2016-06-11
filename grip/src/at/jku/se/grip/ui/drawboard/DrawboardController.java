@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.vaadin.hezamu.canvas.Canvas;
 
 import com.vaadin.server.ClientConnector.AttachEvent;
@@ -22,7 +23,8 @@ public class DrawboardController {
 	private MousePosition currentPos = new MousePosition(0, 0);
 	private Canvas canvas = null;
 	private List<MousePosition> path = new ArrayList<>();
-	private JSONArray pathJason = new JSONArray();
+	private JSONObject jsonPath = new JSONObject();
+	//private JSONArray pathJason = new JSONArray();
 
 	public DrawboardController() {
 		view = new DrawboardView();
@@ -41,13 +43,13 @@ public class DrawboardController {
 	}
 
 	private void saveListener(Button.ClickEvent e) {
-		pathJason.clear();
+		jsonPath.clear();
 		canvasToJson();
 
-		if (pathJason.isEmpty()) {
+		if (jsonPath.isEmpty()) {
 			System.out.print("pathJason = Empty" + "\n");
 		} else {
-			System.out.print(pathJason + "\n");
+			System.out.print(jsonPath + "\n");
 		}
 	}
 
@@ -141,6 +143,7 @@ public class DrawboardController {
 		double orientationOld = 0;
 		double orientationNew = 0;
 		double turn = 0;
+		JSONArray jsonArray = new JSONArray();
 
 		for (int i = 1; i < path.size(); i++) {
 			orientationOld = orientationNew;
@@ -170,14 +173,18 @@ public class DrawboardController {
 					turn = turn + 360;
 				}
 			}
-			pathJason.add((int) Math.round(turn));
 
 			// The pixels between old postion and new position are the distance
 			// to drive
 			distance = Math.round(Math.sqrt(Math.pow(xNew - xOld, 2)
 					+ Math.pow(yNew - yOld, 2)));
 			distance = Math.round(distance);
-			pathJason.add((int) Math.round(distance * 0.25));
+
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("degree", (int) Math.round(turn));
+			jsonObj.put("distance", (int) Math.round(distance * 0.25));
+			jsonArray.add(jsonObj);
+			jsonPath.put("path", jsonArray);
 
 			// System.out.print("turn: " + turn + "\n");
 			// System.out.print("distance: " + (int) distance + "\n");
