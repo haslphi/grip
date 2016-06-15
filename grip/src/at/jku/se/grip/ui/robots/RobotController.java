@@ -32,6 +32,7 @@ public class RobotController {
 	
 	private void init(){
 		view.getFilter().addTextChangeListener(this::filterListener);
+		view.getRefreshButton().addClickListener(this::refreshButtonListener);
 		view.getNewBeanButton().addClickListener(this::newBeanListener);
 		view.getBeanList().addSelectionListener(this::selectionListener);
 		view.getBeanForm().getSaveButton().addClickListener(this::saveListener);
@@ -40,6 +41,10 @@ public class RobotController {
 	
 	private void filterListener(TextChangeEvent e) {
 		refreshBeans(e.getText());
+	}
+	
+	private void refreshButtonListener(ClickEvent e) {
+		refreshBeans();
 	}
 	
 	private void newBeanListener(ClickEvent e) {
@@ -101,6 +106,7 @@ public class RobotController {
     private CriteriaFactory createFilterCriteria(String filter) {
     	CriteriaFactory factory = CriteriaFactory.create();
     	if(StringUtils.isNotBlank(filter)) {
+    		// exclude hidden columns and the port column from searching
     		view.getBeanList().getColumns().stream().forEach(c -> {
     			if(!c.isHidden() && !"port".equalsIgnoreCase(c.getPropertyId().toString())) {
     				factory.orLike(c.getPropertyId().toString(), filter);

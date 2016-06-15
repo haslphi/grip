@@ -32,6 +32,7 @@ public class UserController {
 	
 	private void init(){
 		view.getFilter().addTextChangeListener(this::filterListener);
+		view.getRefreshButton().addClickListener(this::refreshButtonListener);
 		view.getNewUserButton().addClickListener(this::newUserListener);
 		view.getUserList().addSelectionListener(this::selectionListener);
 		view.getUserForm().getSaveButton().addClickListener(this::saveListener);
@@ -39,7 +40,11 @@ public class UserController {
 	}
 	
 	private void filterListener(TextChangeEvent e) {
-		refreshUser(e.getText());
+		refreshUsers(e.getText());
+	}
+	
+	private void refreshButtonListener(ClickEvent e) {
+		refreshUsers();
 	}
 	
 	private void newUserListener(ClickEvent e) {
@@ -77,7 +82,7 @@ public class UserController {
 	 * @param filter
 	 */
 	public void refreshUsers() {
-        refreshUser(view.getFilter().getValue());
+        refreshUsers(view.getFilter().getValue());
     }
 	
 	/**
@@ -85,7 +90,7 @@ public class UserController {
 	 * 
 	 * @param filter
 	 */
-    public void refreshUser(String filter) {
+    public void refreshUsers(String filter) {
     	List<User> beans = DaoServiceRegistry.getUserDAO().findByCriteria(createFilterCriteria(filter));
     	view.getUserList().setContainerDataSource(new BeanItemContainer<>(
                 User.class, beans));
@@ -101,6 +106,7 @@ public class UserController {
     private CriteriaFactory createFilterCriteria(String filter) {
     	CriteriaFactory factory = CriteriaFactory.create();
     	if(StringUtils.isNotBlank(filter)) {
+    		// exclude hidden columns from searching
     		view.getUserList().getColumns().stream().forEach(c -> {
     			if(!c.isHidden()) {
     				factory.orLike(c.getPropertyId().toString(), filter);

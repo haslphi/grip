@@ -1,6 +1,7 @@
 package at.jku.se.grip.ui.robots;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
@@ -19,6 +20,7 @@ public class RobotView extends CustomComponent {
 	private TextField filter = null;
 	private Grid beanList = null;
 	private Button newBean = null;
+	private Button refreshButton = null;
     private RobotForm beanForm = null;
 	
 	public RobotView(){
@@ -63,6 +65,7 @@ public class RobotView extends CustomComponent {
 	        actions.setWidth("100%");
 	        
 	        actions.addComponent(getFilter());
+	        actions.addComponent(getRefreshButton());
 	        actions.addComponent(getNewBeanButton());	        
 	        
 	        actions.setExpandRatio(filter, 1);	        
@@ -84,6 +87,14 @@ public class RobotView extends CustomComponent {
 			newBean = new Button("New robot");
 		}
 		return newBean;
+	}
+	
+	public Button getRefreshButton() {
+		if(refreshButton == null) {
+			refreshButton = new Button();
+			refreshButton.setIcon(FontAwesome.REFRESH);
+		}
+		return refreshButton;
 	}
 	
 	public RobotForm getBeanForm(){

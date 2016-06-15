@@ -1,6 +1,7 @@
 package at.jku.se.grip.ui.users;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Grid;
@@ -19,6 +20,7 @@ public class UserView extends CustomComponent {
 	private TextField filter = null;
 	private Grid userList = null;
 	private Button newUser = null;
+	private Button refreshButton = null;
     private UserForm userForm = null;
 	
 	public UserView(){
@@ -63,7 +65,8 @@ public class UserView extends CustomComponent {
 	        actions.setWidth("100%");
 	        
 	        actions.addComponent(getFilter());
-	        actions.addComponent(getNewUserButton());	        
+	        actions.addComponent(getRefreshButton());
+	        actions.addComponent(getNewUserButton());	
 	        
 	        actions.setExpandRatio(filter, 1);	        
 		}
@@ -84,6 +87,14 @@ public class UserView extends CustomComponent {
 			newUser = new Button("New contact");
 		}
 		return newUser;
+	}
+	
+	public Button getRefreshButton() {
+		if(refreshButton == null) {
+			refreshButton = new Button();
+			refreshButton.setIcon(FontAwesome.REFRESH);
+		}
+		return refreshButton;
 	}
 	
 	public UserForm getUserForm(){
