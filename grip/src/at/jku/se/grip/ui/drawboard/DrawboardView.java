@@ -3,6 +3,7 @@ package at.jku.se.grip.ui.drawboard;
 import org.vaadin.hezamu.canvas.Canvas;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
@@ -13,17 +14,16 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import at.jku.se.grip.backend.ContactService;
-
 @SuppressWarnings("serial")
 public class DrawboardView extends CustomComponent {
 
 	private HorizontalLayout mainLayout = null;
 	private VerticalLayout drawLayout = null;
 	private HorizontalLayout canvasLayout = null;
-	private Label canvasLabel = null;
+	private Label headerLabel = null;
 	private FormLayout selectMenuFormLayout = null;
 	private ComboBox selectPathComboBox = null;
+	private ComboBox selectRobotComboBox = null;
 	private HorizontalLayout selectDeleteButtons = null;
 	private Button selectButton = null;
 	private Button deleteButton = null;
@@ -31,11 +31,10 @@ public class DrawboardView extends CustomComponent {
 	private HorizontalLayout saveClearButtons = null;
 	private Button saveButton = null;
 	private Button clearButton = null;
+	private Button executeButton = null;
 	private Canvas canvas = null;
-
-	private VerticalLayout left = null;
-
-	ContactService service = ContactService.createDemoService();
+	private VerticalLayout rootVerticalLayout = null;
+	private HorizontalLayout headerHorizontalLayout = null;
 
 	public DrawboardView() {
 		super();
@@ -43,16 +42,50 @@ public class DrawboardView extends CustomComponent {
 	}
 
 	private void init() {
-		this.setCompositionRoot(getMainLayout());
+		this.setCompositionRoot(getRootVerticalLayout());
 		this.setSizeFull();
 	}
 
+	public VerticalLayout getRootVerticalLayout() {
+		if(rootVerticalLayout == null) {
+			rootVerticalLayout = new VerticalLayout();
+			rootVerticalLayout.setSizeFull();
+			rootVerticalLayout.setMargin(true);
+			rootVerticalLayout.addStyleName("dashboard-view");
+			rootVerticalLayout.addComponent(getHeaderHorizontalLayout());
+			rootVerticalLayout.addComponent(getMainLayout());
+			rootVerticalLayout.setExpandRatio(getMainLayout(), 1f);
+		}
+		return rootVerticalLayout;
+	}
+	
+	public HorizontalLayout getHeaderHorizontalLayout() {
+		if(headerHorizontalLayout == null) {
+			headerHorizontalLayout = new HorizontalLayout();
+			headerHorizontalLayout.addStyleName("viewheader");
+			headerHorizontalLayout.setSpacing(true);
+			headerHorizontalLayout.addComponent(getHeaderLabel());
+		}
+		return headerHorizontalLayout;
+	}
+	
+	public Label getHeaderLabel() {
+		if(headerLabel == null) {
+			headerLabel = new Label("Drawboard");
+			headerLabel.setSizeUndefined();
+			headerLabel.addStyleName(ValoTheme.LABEL_H1);
+			headerLabel.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+		}
+		return headerLabel;
+	}
+	
 	public HorizontalLayout getMainLayout() {
 		if (mainLayout == null) {
 			mainLayout = new HorizontalLayout();
 			mainLayout.setSizeFull();
 
 			mainLayout.addComponent(getSelectMenu());
+			mainLayout.setComponentAlignment(getSelectMenu(), Alignment.TOP_LEFT);
 			mainLayout.addComponent(getDrawLayout());
 
 			mainLayout.setExpandRatio(selectMenuFormLayout, 1);
@@ -65,7 +98,6 @@ public class DrawboardView extends CustomComponent {
 		if (drawLayout == null) {
 			drawLayout = new VerticalLayout();
 			drawLayout.setSizeFull();
-			drawLayout.addComponent(getCanvasLabel());
 			drawLayout.addComponent(getCanvasLayout());
 			drawLayout.setExpandRatio(getCanvasLayout(), 1);
 		}
@@ -83,47 +115,41 @@ public class DrawboardView extends CustomComponent {
 		return canvasLayout;
 	}
 
-	public Label getCanvasLabel() {
-		if (canvasLabel == null) {
-			canvasLabel = new Label("Drawboard");
-			canvasLabel.setIcon(FontAwesome.DASHBOARD);
-			canvasLabel.addStyleName(ValoTheme.LABEL_BOLD);
-		}
-		return canvasLabel;
-	}
-
-	public VerticalLayout getLeft() {
-		if (left == null) {
-			left = new VerticalLayout();
-			left.setSizeFull();
-
-		}
-		return left;
-	}
-
 	public FormLayout getSelectMenu() {
 		if (selectMenuFormLayout == null) {
 			selectMenuFormLayout = new FormLayout();
 			selectMenuFormLayout.setMargin(true);
 
-			selectMenuFormLayout.addComponent(getSelectPath());
+			selectMenuFormLayout.addComponent(getSelectPathComboBox());
 			selectMenuFormLayout.addComponent(getSelectDeleteButtons());
 			selectMenuFormLayout.addComponent(getPathName());
 			selectMenuFormLayout.addComponent(getSaveCancelButtons());
-
+			selectMenuFormLayout.addComponent(getSelectRobotComboBox());
+			selectMenuFormLayout.addComponent(getExecuteButton());
 		}
 		return selectMenuFormLayout;
 	}
 
-	private ComboBox getSelectPath() {
+	public ComboBox getSelectPathComboBox() {
 		if (selectPathComboBox == null) {
 			selectPathComboBox = new ComboBox();
 			selectPathComboBox.addStyleName("vertical");
-			selectPathComboBox.setInputPrompt("Select path");
+			selectPathComboBox.setItemCaptionPropertyId("name");
+			selectPathComboBox.setInputPrompt("Choose path");
 		}
 		return selectPathComboBox;
 	}
-
+	
+	public ComboBox getSelectRobotComboBox() {
+		if (selectRobotComboBox == null) {
+			selectRobotComboBox = new ComboBox();
+			selectRobotComboBox.addStyleName("vertical");
+			selectRobotComboBox.setItemCaptionPropertyId("name");
+			selectRobotComboBox.setInputPrompt("Execute on");
+		}
+		return selectRobotComboBox;
+	}
+	
 	private HorizontalLayout getSelectDeleteButtons() {
 		if (selectDeleteButtons == null) {
 			selectDeleteButtons = new HorizontalLayout();
@@ -134,7 +160,7 @@ public class DrawboardView extends CustomComponent {
 		return selectDeleteButtons;
 	}
 
-	private TextField getPathName() {
+	public TextField getPathName() {
 		if (pathName == null) {
 			pathName = new TextField();
 			pathName.setInputPrompt("Pathname");
@@ -155,29 +181,41 @@ public class DrawboardView extends CustomComponent {
 	public Button getSaveButton() {
 		if (saveButton == null) {
 			saveButton = new Button("Save");
+			saveButton.setIcon(FontAwesome.FLOPPY_O);
 		}
 		return saveButton;
 	}
 
-	private Button getSelectButton() {
+	public Button getSelectButton() {
 		if (selectButton == null) {
 			selectButton = new Button("Select");
+			selectButton.setIcon(FontAwesome.CROSSHAIRS);
 		}
 		return selectButton;
 	}
 
-	private Button getDeleteButton() {
+	public Button getDeleteButton() {
 		if (deleteButton == null) {
 			deleteButton = new Button("Delete");
+			deleteButton.setIcon(FontAwesome.TRASH);
 		}
 		return deleteButton;
 	}
 
-	private Button getClearButton() {
+	public Button getClearButton() {
 		if (clearButton == null) {
 			clearButton = new Button("Clear");
+			clearButton.setIcon(FontAwesome.BAN);
 		}
 		return clearButton;
+	}
+	
+	public Button getExecuteButton() {
+		if(executeButton == null) {
+			executeButton = new Button("Execute");
+			executeButton.setIcon(FontAwesome.PLAY);
+		}
+		return executeButton;
 	}
 
 	public Canvas getCanvas() {

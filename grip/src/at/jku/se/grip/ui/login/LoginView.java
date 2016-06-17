@@ -60,7 +60,7 @@ public class LoginView extends GridLayout {
 	        fields.addComponent(getUsernameTextField());
 	        fields.addComponent(getPasswordPasswordField());
 	        fields.addComponent(getSignInButton());
-			
+	        fields.setComponentAlignment(getSignInButton(), Alignment.BOTTOM_CENTER);
 		}
 		return fields;
 	}
@@ -78,7 +78,7 @@ public class LoginView extends GridLayout {
 	
 	public TextField getUsernameTextField(){
 		if(username == null){
-			username = new TextField();
+			username = new TextField("Username");
 	        username.setIcon(FontAwesome.USER);
 	        username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		}
@@ -87,7 +87,7 @@ public class LoginView extends GridLayout {
 	
 	public PasswordField getPasswordPasswordField(){
 		if(password == null){
-			password = new PasswordField();
+			password = new PasswordField("Password");
 	        password.setIcon(FontAwesome.LOCK);
 	        password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
 		}

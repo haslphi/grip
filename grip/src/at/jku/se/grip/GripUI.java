@@ -16,6 +16,7 @@ import org.vaadin.viritin.fields.MTable;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -34,6 +35,7 @@ import at.jku.se.grip.ui.users.UserController;
 
 @SuppressWarnings("serial")
 @Theme("grip")
+@Title("GRIP")
 public class GripUI extends UI {
 	public static User user;
 	private LoginController loginController = null;
@@ -115,6 +117,9 @@ public class GripUI extends UI {
 		user = null;
 		loginController = new LoginController();
 		setContent(loginController.getView());
+		
+		// focus username text field (after view was attached)
+		loginController.getView().getUsernameTextField().focus();
 
 		applicationController = null;
 	}

@@ -9,7 +9,10 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import at.jku.se.grip.common.Constants;
+import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.security.CryptoService;
+import at.jku.se.grip.ui.events.IBeanCUDEvent;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -70,5 +73,32 @@ public class User extends HistorizableEntity {
 			e.printStackTrace();
 		}
 		super.preUpdate();
+	}
+	
+	@Override
+	public IBeanCUDEvent createEvent(UpdateType updateType) {
+		// sending of an event for this bean is currently not needed
+		//return new UserPersistenceEvent(this, updateType);
+		return null;
+	}
+	
+	/**
+	 * Event that can be sent when a {@link Robot} bean is created/updated/deleted.
+	 */
+	@AllArgsConstructor
+	public static class UserPersistenceEvent implements IBeanCUDEvent {
+		private User bean = null;
+		private UpdateType updateType = null;
+
+		@Override
+		public GenericEntity<? extends GenericPK> getBean() {
+			return bean;
+		}
+
+		@Override
+		public UpdateType getUpdateType() {
+			return updateType;
+		}
+		
 	}
 }

@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.MappedSuperclass;
 
+import at.jku.se.grip.common.UpdateType;
+import at.jku.se.grip.ui.events.IBeanCUDEvent;
+
 /**
  * Root entity for all persistence entities.
  * 
@@ -47,6 +50,18 @@ public abstract class GenericEntity<ID extends GenericPK> implements Serializabl
 	 * Override to do some things directly before removing the bean.
 	 */
 	public void preDelete() {
+	}
+	
+	/**
+	 * Create a CUD Event of a certain type.
+	 * Override and return a non null bean if you want the send an event over the EventBus.
+	 * 
+	 * @param updateType
+	 * @return
+	 */
+	public IBeanCUDEvent createEvent(UpdateType updateType) {
+		// sending of an event for a bean is per default "turned off" (null is returned)
+		return null;
 	}
 	
 	@Override

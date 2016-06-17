@@ -9,11 +9,15 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Order;
 import javax.transaction.TransactionRolledbackException;
 
+import com.google.common.eventbus.EventBus;
+
+import at.jku.se.grip.GripUI;
 import at.jku.se.grip.beans.GenericEntity;
 import at.jku.se.grip.beans.GenericPK;
 import at.jku.se.grip.common.CriteriaFactory;
 import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.dao.base.IGenericDAO;
+import at.jku.se.grip.ui.events.IBeanCUDEvent;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -129,6 +133,8 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 		finally {
 			closeSession();
 		}
+		
+		sendCUDEvent(bean, type);
 
 		return bean;
 	}
@@ -138,6 +144,22 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 		//bean = findInEM(getType(), bean.getId());
 		bean = getEM().merge(bean);
 		getEM().remove(bean);
+		
+		sendCUDEvent(bean, UpdateType.DELETE);
+		
 		return bean;
+	}
+	
+	/**
+	 * Send an {@link IBeanCUDEvent} over the {@link EventBus}
+	 * 
+	 * @param bean
+	 * @param updateType
+	 */
+	protected void sendCUDEvent(T bean, UpdateType updateType) {
+		IBeanCUDEvent event = bean.createEvent(UpdateType.UPDATE);
+		if(event != null) {
+			GripUI.getEventBus().post(bean.createEvent(UpdateType.UPDATE));
+		}
 	}
 }

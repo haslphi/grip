@@ -17,7 +17,6 @@ import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.series.BarRenderer;
 
-import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.ui.BrowserFrame;
 
@@ -30,7 +29,11 @@ public class OverviewController {
 		init();
 	}
 	
-	private void init(){
+	private void init() {
+		
+	}
+	
+	private void init2(){
 		/*DataSeries dataSeries = new DataSeries()
 				.add(2, 6, 7, 10);
 
@@ -131,8 +134,8 @@ public class OverviewController {
 		BrowserFrame frame = new BrowserFrame();
 		frame.setWidth("1000px");
 		frame.setHeight("600px");
-		frame.setSource(new StreamResource(new ChartStreamSource(), "chart"));
-		getView().getCanvasLayout().addComponent(frame);
+		//frame.setSource(new StreamResource(new ChartStreamSource(), "chart"));
+		//getView().getCanvasLayout().addComponent(frame);
 
 	}
 	

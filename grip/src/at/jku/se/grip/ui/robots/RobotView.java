@@ -77,7 +77,7 @@ public class RobotView extends CustomComponent {
 		if(filter == null) {
 			filter = new TextField();
 	        filter.setWidth("100%");
-	        filter.setInputPrompt("Find User...");
+	        filter.setInputPrompt("Find Robot...");
 		}
 		return filter;
 	}
@@ -85,6 +85,7 @@ public class RobotView extends CustomComponent {
 	public Button getNewBeanButton(){
 		if(newBean == null) {
 			newBean = new Button("New robot");
+			newBean.setIcon(FontAwesome.PLUS);
 		}
 		return newBean;
 	}

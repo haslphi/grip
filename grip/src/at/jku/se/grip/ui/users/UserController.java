@@ -36,7 +36,7 @@ public class UserController {
 		view.getNewUserButton().addClickListener(this::newUserListener);
 		view.getUserList().addSelectionListener(this::selectionListener);
 		view.getUserForm().getSaveButton().addClickListener(this::saveListener);
-		view.getUserForm().getCancleButton().addClickListener(this::cancelListener);
+		view.getUserForm().getCancelButton().addClickListener(this::cancelListener);
 	}
 	
 	private void filterListener(TextChangeEvent e) {
@@ -77,9 +77,8 @@ public class UserController {
 	}
 	
 	/**
-	 * Refresh the grid without any.
+	 * Refresh the grid.
 	 * 
-	 * @param filter
 	 */
 	public void refreshUsers() {
         refreshUsers(view.getFilter().getValue());

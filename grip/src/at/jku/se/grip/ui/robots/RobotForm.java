@@ -17,9 +17,10 @@ public class RobotForm extends CustomComponent {
 
 	private FormLayout mainLayout = null;
 	private VerticalLayout actions = null;
-	private HorizontalLayout saveCancelButtons = null;
+	private HorizontalLayout buttonHorizontalLayout = null;
     private Button saveButton = null;
     private Button cancelButton = null;
+    private Button testConnectionButton = null;
     private TextField name = null;
     private TextField host = null;
     private TextField port = null;
@@ -48,7 +49,7 @@ public class RobotForm extends CustomComponent {
 		if(actions == null) {
 			actions = new VerticalLayout();
 			actions.setSpacing(true);			
-			actions.addComponent(getSaveCancelButtons());
+			actions.addComponent(getButtonHorizontalLayout());
 			actions.addComponent(getName());
 			actions.addComponent(getHost());
 			actions.addComponent(getPort());
@@ -57,28 +58,41 @@ public class RobotForm extends CustomComponent {
 		return actions;
 	}
 	
-	private HorizontalLayout getSaveCancelButtons(){
-		if(saveCancelButtons == null) {
-			saveCancelButtons = new HorizontalLayout();
-			saveCancelButtons.setSpacing(true);
-			saveCancelButtons.addComponent(getSaveButton());
-			saveCancelButtons.addComponent(getCancleButton());
+	private HorizontalLayout getButtonHorizontalLayout(){
+		if(buttonHorizontalLayout == null) {
+			buttonHorizontalLayout = new HorizontalLayout();
+			buttonHorizontalLayout.setSpacing(true);
+			buttonHorizontalLayout.addComponent(getSaveButton());
+			buttonHorizontalLayout.addComponent(getCancelButton());
+			buttonHorizontalLayout.addComponent(getTestConnectionButton());
 		}
-		return saveCancelButtons;
+		return buttonHorizontalLayout;
 	}
 	
 	public Button getSaveButton(){
 		if(saveButton == null) {
 			saveButton = new Button("Save");
+			saveButton.setIcon(FontAwesome.FLOPPY_O);
+			saveButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		}
 		return saveButton;
 	}	
 	
-	public Button getCancleButton(){
+	public Button getCancelButton(){
 		if(cancelButton == null) {
 			cancelButton = new Button("Cancel");
+			cancelButton.setIcon(FontAwesome.BAN);
+			cancelButton.addStyleName(ValoTheme.BUTTON_DANGER);
 		}
 		return cancelButton;
+	}
+	
+	public Button getTestConnectionButton() {
+		if(testConnectionButton == null) {
+			testConnectionButton = new Button("Test Connection");
+			testConnectionButton.setIcon(FontAwesome.EXCHANGE);
+		}
+		return testConnectionButton;
 	}
 	
 	public TextField getName(){

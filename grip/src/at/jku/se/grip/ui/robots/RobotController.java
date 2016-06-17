@@ -36,7 +36,7 @@ public class RobotController {
 		view.getNewBeanButton().addClickListener(this::newBeanListener);
 		view.getBeanList().addSelectionListener(this::selectionListener);
 		view.getBeanForm().getSaveButton().addClickListener(this::saveListener);
-		view.getBeanForm().getCancleButton().addClickListener(this::cancelListener);
+		view.getBeanForm().getCancelButton().addClickListener(this::cancelListener);
 	}
 	
 	private void filterListener(TextChangeEvent e) {

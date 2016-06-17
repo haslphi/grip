@@ -85,6 +85,7 @@ public class UserView extends CustomComponent {
 	public Button getNewUserButton(){
 		if(newUser == null) {
 			newUser = new Button("New contact");
+			newUser.setIcon(FontAwesome.PLUS);
 		}
 		return newUser;
 	}

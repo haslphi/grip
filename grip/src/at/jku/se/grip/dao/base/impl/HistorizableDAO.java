@@ -13,6 +13,7 @@ import at.jku.se.grip.beans.GenericPK;
 import at.jku.se.grip.beans.HistorizableEntity;
 import at.jku.se.grip.beans.HistoryPK;
 import at.jku.se.grip.common.CriteriaFactory;
+import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.dao.base.IHistorizableDAO;
 
 public abstract class HistorizableDAO<H extends HistorizableEntity> extends GenericDAO<H> implements IHistorizableDAO<H> {
@@ -50,7 +51,7 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 	}*/
 	
 	public H save(H bean) {
-		//UpdateType updateType = null;
+		UpdateType updateType = null;
 		boolean successful = false;
 		H current = null;
 		beginSession();
@@ -60,14 +61,14 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 			}
 
 			if (bean.isNew()) {
-				//updateType = UpdateType.ADD;
+				updateType = UpdateType.ADD;
 				beginTransaction();
 				bean.preCreate();
 				getEM().persist(bean);
 				getEM().flush();	// flush the session, so the newly saved instance is known in the database within the session
 				commitTransaction();
 			} else {
-				//updateType = UpdateType.UPDATE;
+				updateType = UpdateType.UPDATE;
 				H histBean = getType().getConstructor().newInstance();
 				PropertyUtils.copyProperties(histBean, current);
 				histBean.setId(new HistoryPK(current.getId().getId(), System.currentTimeMillis()));
@@ -103,11 +104,13 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 			}
 			closeSession();
 		}
+		
+		sendCUDEvent(bean, updateType);
 
 		return bean;
 	}
 	
-	@Override
+	/*@Override
 	protected H removeBean(H bean) {
 		beginSession();
 		try {
@@ -122,7 +125,10 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 				e1.printStackTrace();
 			}
 		}
+		
+		sendCUDEvent(bean, UpdateType.DELETE);
+		
 		return bean;
-	}
+	}*/
 	
 }

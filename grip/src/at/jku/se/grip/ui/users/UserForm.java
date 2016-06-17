@@ -65,7 +65,7 @@ public class UserForm extends CustomComponent {
 			saveCancelButtons = new HorizontalLayout();
 			saveCancelButtons.setSpacing(true);
 			saveCancelButtons.addComponent(getSaveButton());
-			saveCancelButtons.addComponent(getCancleButton());
+			saveCancelButtons.addComponent(getCancelButton());
 		}
 		return saveCancelButtons;
 	}
@@ -73,13 +73,17 @@ public class UserForm extends CustomComponent {
 	public Button getSaveButton(){
 		if(saveButton == null) {
 			saveButton = new Button("Save");
+			saveButton.setIcon(FontAwesome.FLOPPY_O);
+			saveButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		}
 		return saveButton;
 	}	
 	
-	public Button getCancleButton(){
+	public Button getCancelButton(){
 		if(cancelButton == null) {
 			cancelButton = new Button("Cancel");
+			cancelButton.setIcon(FontAwesome.BAN);
+			cancelButton.addStyleName(ValoTheme.BUTTON_DANGER);
 		}
 		return cancelButton;
 	}
