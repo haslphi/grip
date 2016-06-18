@@ -1,7 +1,11 @@
 package at.jku.se.grip.ui.drawboard;
 
+
+
 import static at.jku.se.grip.common.Constants.VALO_BLUE;
 
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +17,7 @@ import org.vaadin.hezamu.canvas.Canvas;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.Page;
 import com.vaadin.server.ClientConnector.AttachEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Button;
@@ -23,6 +28,7 @@ import at.jku.se.grip.beans.Drawing;
 import at.jku.se.grip.beans.Robot;
 import at.jku.se.grip.beans.Robot.RobotPersistenceEvent;
 import at.jku.se.grip.common.CriteriaFactory;
+import at.jku.se.grip.common.NotificationPusher;
 import at.jku.se.grip.dao.DaoServiceRegistry;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -52,6 +58,7 @@ public class DrawboardController {
 		view.getSelectButton().addClickListener(this::selectListener);
 		view.getClearButton().addClickListener(this::clearListener);
 		view.getDeleteButton().addClickListener(this::deleteListener);
+		view.getExecuteButton().addClickListener(this::executeListener);
 		
 		refreshPaths(false);
 		refreshRobots(false);
@@ -140,6 +147,50 @@ public class DrawboardController {
 			DaoServiceRegistry.getDrawingDAO().delete(value);
 		}
 		refreshPaths(false);
+	}
+	
+	
+	private void executeListener(Button.ClickEvent e) {
+		Robot robot = (Robot) view.getSelectRobotComboBox().getValue();
+		if(robot != null && !robot.isNew()) {
+			Socket clientSocket = null;
+			try {
+				String urlPath = "GET /setJson?json=";
+				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
+				clientSocket = new Socket(robot.getHost(), robot.getPort() == null ? 80 : robot.getPort());
+				DataOutputStream outToServer = new DataOutputStream(
+						clientSocket.getOutputStream());
+				//BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				outToServer.writeBytes(urlPath + json);
+//				String response = "";
+//				while (!response.contains(".")) {
+//					response = reader.readLine();
+//					System.out.println(response);
+//				}
+//				reader.close();
+//				System.out.println(response);
+				
+//				response = reader.readLine();
+//				System.out.println(response);
+				//outToServer.writeBytes(pathListToJsonDirections(false).toJSONString());
+
+				System.out.println(pathListToJsonDirections(false));
+			} catch (IOException ex) {
+				System.out.println("IOException occured!");
+			} catch (Exception ex) {
+				System.out.println("Server Connection failed!");
+			} finally {
+				if(clientSocket != null) {
+					try {
+						clientSocket.close();
+					} catch (IOException e1) {
+						//ignore
+					}
+				}
+			}
+		} else {
+			NotificationPusher.showCustomError(Page.getCurrent(), "Select a robot first.", "Robot missing!", 2000);
+		}
 	}
 	
 	/**
