@@ -80,7 +80,6 @@ public class OverviewView extends Panel {
 			Responsive.makeResponsive(dashboardPanelsCssLayout);
 			
 			dashboardPanelsCssLayout.addComponent(getNoteComponent());
-			dashboardPanelsCssLayout.addComponent(getNoteComponent2());
 		}
 		return dashboardPanelsCssLayout;
 	}
@@ -97,17 +96,7 @@ public class OverviewView extends Panel {
 		return noteComponent;
 	}
 	
-	public Component getNoteComponent2() {
-		Component c = null;
-			TextArea notes = new TextArea("Notes");
-	        notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
-	        notes.setSizeFull();
-	        notes.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
-	        c = createContentWrapper(notes);
-	        return c;
-	}
-	
-	private Component createContentWrapper(final Component content) {
+	protected Component createContentWrapper(final Component content) {
         final CssLayout slot = new CssLayout();
         slot.setWidth("100%");
         slot.addStyleName("dashboard-panel-slot");

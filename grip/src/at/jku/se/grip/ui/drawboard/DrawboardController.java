@@ -149,9 +149,12 @@ public class DrawboardController {
 	 */
 	private void saveListener(Button.ClickEvent e) {
 		if(selected == null) {
+			JSONObject directions = pathListToJsonDirections(true);
 			JSONObject jsonPath = pathListToJsonPath();
 			if(jsonPath != null && !jsonPath.isEmpty()) {
-				Drawing drawing = new Drawing(view.getPathName().getValue(), jsonPath.toJSONString());
+				Drawing drawing = new Drawing(view.getPathName().getValue(),
+						jsonPath.toJSONString(),
+						((Integer) directions.get("distance")).intValue());
 				drawing  = DaoServiceRegistry.getDrawingDAO().save(drawing);
 				System.out.print(jsonPath + "\n");
 			}
@@ -274,7 +277,7 @@ public class DrawboardController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private JSONObject pathListToJsonDirections() {
+	private JSONObject pathListToJsonDirections(boolean calcDistanceOnly) {
 		double xOld = path.get(0).x;
 		double yOld = 660 - path.get(0).y;
 		double xNew = path.get(0).x;
@@ -285,6 +288,7 @@ public class DrawboardController {
 		double turn = 0;
 		JSONObject jsonDirections = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
+		int distanceOnly = 0;
 
 		for (int i = 1; i < path.size(); i++) {
 			orientationOld = orientationNew;
@@ -321,13 +325,20 @@ public class DrawboardController {
 					+ Math.pow(yNew - yOld, 2)));
 			distance = Math.round(distance);
 
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("degree", (int) Math.round(turn));
-			jsonObj.put("distance", (int) Math.round(distance * 0.25));
-			jsonArray.add(jsonObj);
-			
+			if(!calcDistanceOnly) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("degree", (int) Math.round(turn));
+				jsonObj.put("distance", (int) Math.round(distance * 0.25));
+				jsonArray.add(jsonObj);
+			} else {
+				distanceOnly = distanceOnly + (int) Math.round(distance * 0.25);
+			}
 		}
-		jsonDirections.put("directions", jsonArray);
+		if(!calcDistanceOnly) {
+			jsonDirections.put("directions", jsonArray);
+		} else {
+			jsonDirections.put("distance", distanceOnly);
+		}
 		return jsonDirections;
 	}
 	

@@ -18,8 +18,11 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.ui.UI;
 
 import at.jku.se.grip.beans.User;
@@ -49,6 +52,14 @@ public class GripUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest request) {
+		Page.getCurrent().addBrowserWindowResizeListener(new BrowserWindowResizeListener() {
+			
+			@Override
+			public void browserWindowResized(BrowserWindowResizeEvent event) {
+				// use to inform component which need manual resizing
+				
+			}
+		});
 
 		// set the UI size to max
 		setSizeFull();

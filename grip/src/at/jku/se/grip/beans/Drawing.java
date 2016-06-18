@@ -28,12 +28,16 @@ public class Drawing extends HistorizableEntity {
 
 	public static final String COLUMN_JASON_PATH = "JSON_PATH";
 	public static final String COLUMN_NAME = "NAME";
+	public static final String COLUMN_PATH_LENGTH = "PATH_LENGTH";
 	
-	@Column(name = COLUMN_NAME)
+	@Column(name = COLUMN_NAME, nullable = false)
 	private String name;
 	
-	@Column(name = COLUMN_JASON_PATH)
+	@Column(name = COLUMN_JASON_PATH, nullable = false)
 	@Lob
 	private String jsonPath;
+	
+	@Column(name = COLUMN_PATH_LENGTH, nullable = false)
+	private Integer pathLength;
 	
 }

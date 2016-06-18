@@ -50,6 +50,10 @@ public class ApplicationController {
 	}
 	
 	private void signOut (Button.ClickEvent event){
+		// save Notes before logout
+		if(overviewController != null) {
+			//overviewController.
+		}
 		GripUI.getEventBus().post(new LogoutEvent());
 	}
 	
