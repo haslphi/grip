@@ -155,13 +155,15 @@ public class DrawboardController {
 		if(robot != null && !robot.isNew()) {
 			Socket clientSocket = null;
 			try {
-				String urlPath = "GET /setJson?json=";
-				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
+//				String urlPath = "GET /setJson?json=";
+//				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
+				String json = pathListToJsonDirections(false).toJSONString();
 				clientSocket = new Socket(robot.getHost(), robot.getPort() == null ? 80 : robot.getPort());
 				DataOutputStream outToServer = new DataOutputStream(
 						clientSocket.getOutputStream());
 				//BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				outToServer.writeBytes(urlPath + json);
+				outToServer.writeBytes(json);
+//				outToServer.writeBytes(urlPath + json);
 //				String response = "";
 //				while (!response.contains(".")) {
 //					response = reader.readLine();
