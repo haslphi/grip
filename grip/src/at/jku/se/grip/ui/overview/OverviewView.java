@@ -1,22 +1,30 @@
 package at.jku.se.grip.ui.overview;
 
 import java.util.Iterator;
+import java.util.Locale;
 
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.ImageRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+
+import at.jku.se.grip.beans.Drawing;
+import at.jku.se.grip.beans.Header;
+import lombok.Getter;
 
 @SuppressWarnings("serial")
 public class OverviewView extends Panel {
@@ -25,7 +33,10 @@ public class OverviewView extends Panel {
     private HorizontalLayout headerHorizontalLayout = null;
     private Label headerLabel = null;
     private CssLayout dashboardPanelsCssLayout = null;
-    private Component noteComponent = null;
+    private SlotComponent noteComponent = null;
+    private TextArea notesTextArea = null;
+    private Component drawingComponent = null;
+    private Grid drawingGrid = null;
 	
 	public OverviewView(){
 		super();
@@ -84,20 +95,73 @@ public class OverviewView extends Panel {
 		return dashboardPanelsCssLayout;
 	}
 	
-	public Component getNoteComponent() {
+	public SlotComponent getNoteComponent() {
 		if(noteComponent == null) {
-			TextArea notes = new TextArea("Notes");
-	        notes.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
-	        notes.setSizeFull();
-	        notes.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
-	        noteComponent = createContentWrapper(notes);
+	        noteComponent = createContentWrapper(getNotesTextArea(), FontAwesome.FLOPPY_O);
 	        noteComponent.addStyleName("notes");
 		}
 		return noteComponent;
 	}
 	
-	protected Component createContentWrapper(final Component content) {
-        final CssLayout slot = new CssLayout();
+	public TextArea getNotesTextArea() {
+		if(notesTextArea == null) {
+			notesTextArea = new TextArea("Notes");
+			//notesTextArea.setValue("Remember to:\n· Zoom in and out in the Sales view\n· Filter the transactions and drag a set of them to the Reports tab\n· Create a new report\n· Change the schedule of the movie theater");
+			notesTextArea.setSizeFull();
+			notesTextArea.addStyleName(ValoTheme.TEXTAREA_BORDERLESS);
+		}
+		return notesTextArea;
+	}
+	
+	public Component getDrawingComponent() {
+		if(drawingComponent == null) {
+			drawingComponent = createContentWrapper(getDrawingGrid());
+		}
+		return drawingComponent;
+	}
+	
+	public Grid getDrawingGrid(){
+		if(drawingGrid == null) {
+			drawingGrid = new Grid("Drawing Quickselect");
+			drawingGrid.setSizeFull();
+			
+			drawingGrid.setContainerDataSource(new BeanItemContainer<>(Drawing.class));
+			drawingGrid.removeAllColumns();
+			drawingGrid.addColumn("name").setExpandRatio(4).setHeaderCaption("Path Name");
+			drawingGrid.addColumn("header").setExpandRatio(1).setHeaderCaption("User").setConverter(new Converter<String, Header>(){
+
+				@Override
+				public Header convertToModel(String value, Class<? extends Header> targetType, Locale locale)
+						throws com.vaadin.data.util.converter.Converter.ConversionException {
+					return null;
+				}
+
+				@Override
+				public String convertToPresentation(Header value, Class<? extends String> targetType, Locale locale)
+						throws com.vaadin.data.util.converter.Converter.ConversionException {
+					return value.getCreatedBy().getUsername();
+				}
+
+				@Override
+				public Class<Header> getModelType() {
+					return Header.class;
+				}
+
+				@Override
+				public Class<String> getPresentationType() {
+					return String.class;
+				}
+				
+			});
+			drawingGrid.addColumn("icon").setHeaderCaption("").setWidth(62).setRenderer(new ImageRenderer());
+			
+			drawingGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+		}
+		return drawingGrid;
+	}
+	
+	protected SlotComponent createContentWrapper(final Component content, FontAwesome ...icons) {
+        final SlotComponent slot = new SlotComponent();
         slot.setWidth("100%");
         slot.addStyleName("dashboard-panel-slot");
 
@@ -115,8 +179,7 @@ public class OverviewView extends Panel {
         caption.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         content.setCaption(null);
 
-        MenuBar tools = new MenuBar();
-        tools.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+        MenuBar tools = slot.getTools();
         MenuItem max = tools.addItem("", FontAwesome.EXPAND, new Command() {
 
             @Override
@@ -132,6 +195,14 @@ public class OverviewView extends Panel {
             }
         });
         max.setStyleName("icon-only");
+        
+        // add dynamic menu items
+        if(icons != null) {
+	        for (FontAwesome icon : icons) {
+	        	tools.addItem("", icon, null);
+			}
+        }
+        /* NO CONFIGURATION implemented at the moment
         MenuItem root = tools.addItem("", FontAwesome.COG, null);
         root.addItem("Configure", new Command() {
             @Override
@@ -146,6 +217,7 @@ public class OverviewView extends Panel {
                 Notification.show("Not implemented in this demo");
             }
         });
+        */
 
         toolbar.addComponents(caption, tools);
         toolbar.setExpandRatio(caption, 1);
@@ -174,4 +246,17 @@ public class OverviewView extends Panel {
             panel.removeStyleName("max");
         }
     }
+	
+	@Getter
+	protected class SlotComponent extends CssLayout {
+		MenuBar tools = new MenuBar();
+		
+		public SlotComponent() {
+			init();
+		}
+		
+		private void init() {
+			tools.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
+		}
+	}
 }

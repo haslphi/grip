@@ -1,11 +1,14 @@
 package at.jku.se.grip.ui;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 
 import at.jku.se.grip.GripUI;
+import at.jku.se.grip.beans.Drawing;
 import at.jku.se.grip.ui.drawboard.DrawboardController;
 import at.jku.se.grip.ui.events.LogoutEvent;
+import at.jku.se.grip.ui.events.OpenDrawingEvent;
 import at.jku.se.grip.ui.overview.OverviewController;
 import at.jku.se.grip.ui.robots.RobotController;
 import at.jku.se.grip.ui.users.UserController;
@@ -25,7 +28,18 @@ public class ApplicationController {
 	}
 	
 	private void init(){
+		// register this instance to the eventbus
+		GripUI.getEventBus().register(this);
+		
+		// set user to the navigation
+		view.getNavigatorView().getUserLabel().setValue("User:"
+				+ " <span class=\"valo-menu-badge\">" + GripUI.getUser().getUsername()
+                + "</span>");
+		
+		// switch to initial panel
 		switchToOverview();
+		
+		// add listener
 		view.getNavigatorView().getOverviewButton().addClickListener(this::overview);
 		view.getNavigatorView().getDrawboardButton().addClickListener(this::drawboard);
 		view.getNavigatorView().getRobotsButton().addClickListener(this::robots);
@@ -38,7 +52,7 @@ public class ApplicationController {
 	}
 	
 	private void drawboard(Button.ClickEvent event) {
-		switchToDrawboard();
+		switchToDrawboard(null);
 	}
 	
 	private void robots(Button.ClickEvent event) {
@@ -52,9 +66,14 @@ public class ApplicationController {
 	private void signOut (Button.ClickEvent event){
 		// save Notes before logout
 		if(overviewController != null) {
-			//overviewController.
+			overviewController.saveNote();
 		}
 		GripUI.getEventBus().post(new LogoutEvent());
+	}
+	
+	@Subscribe
+	public void listenOpenDrawing(OpenDrawingEvent event) {
+		switchToDrawboard(event.getBean());
 	}
 	
 	private void switchToOverview(){
@@ -69,9 +88,11 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
-	private void switchToDrawboard(){
+	private void switchToDrawboard(Drawing bean){
 		if(drawboardController == null){
-			drawboardController = new DrawboardController();			
+			drawboardController = new DrawboardController(bean);			
+		} else {
+			drawboardController.setDrawing(bean);
 		}
 		if(actComponent != null){
 			view.removeComponent(actComponent);

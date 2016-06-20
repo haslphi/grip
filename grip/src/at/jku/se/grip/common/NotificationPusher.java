@@ -38,7 +38,6 @@ public class NotificationPusher {
 	
 	/**
 	 * Show a custom error.<br>
-	 * Requires the user to click the message. Will not disappear automatically.<br>
 	 * With dedicated caption if necessary.
 	 * 
 	 * @param context on which page to show the notification
@@ -50,6 +49,24 @@ public class NotificationPusher {
 		Notification notif = new Notification(StringUtils.isNotBlank(caption) ? caption: DEFAULT_ERROR_CAPTION,
 				error,
 				Notification.Type.ERROR_MESSAGE);
+		notif.setPosition(Position.BOTTOM_CENTER);
+		notif.setDelayMsec(delay != null ? delay : DEFAULT_CUSTOM_ERROR_DELAY);
+		notif.show(current);
+	}
+	
+	/**
+	 * Show a custom warning.<br>
+	 * With dedicated caption if necessary.
+	 * 
+	 * @param context on which page to show the notification
+	 * @param warning the warning string
+	 * @param caption own caption, if null or empty, the default caption {@value #DEFAULT_ERROR_CAPTION} will be used
+	 * @param delay the delay time for the notification, if null default ({@value #DEFAULT_CUSTOM_ERROR_DELAY}) will be used
+	 */
+	public static void showCustomWarning(Page current, String warning, String caption, Integer delay) {
+		Notification notif = new Notification(StringUtils.isNotBlank(caption) ? caption: DEFAULT_ERROR_CAPTION,
+				warning,
+				Notification.Type.WARNING_MESSAGE);
 		notif.setPosition(Position.BOTTOM_CENTER);
 		notif.setDelayMsec(delay != null ? delay : DEFAULT_CUSTOM_ERROR_DELAY);
 		notif.show(current);

@@ -5,5 +5,7 @@ import at.jku.se.grip.dao.base.IGenericDAO;
 
 public interface INoteDAO extends IGenericDAO<Note> {
 
+	Note findByUserId(String userId);
+
 
 }

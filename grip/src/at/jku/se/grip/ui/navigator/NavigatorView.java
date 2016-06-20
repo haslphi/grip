@@ -27,6 +27,7 @@ public class NavigatorView extends CustomComponent {
 	private Button robotsButton = null;
 	private Button usersButton = null;
 	private Button signOutButton = null;
+	private Label userLabel = null;
 	
 	public NavigatorView() {
 		super();
@@ -56,6 +57,7 @@ public class NavigatorView extends CustomComponent {
 			menuVerticalLayout.addComponent(getRobotsButton());
 	        menuVerticalLayout.addComponent(getUsersButton());
 	        menuVerticalLayout.addComponent(getSignOutButton());
+	        menuVerticalLayout.addComponent(getUserLabel());
 		}
 		return menuVerticalLayout;
 	}
@@ -148,5 +150,15 @@ public class NavigatorView extends CustomComponent {
 			signOutButton.setWidth(BUTTON_WIDTH);
 		}
 		return signOutButton;
+	}
+	
+	public Label getUserLabel() {
+		if(userLabel == null) {
+			userLabel = new Label("User", ContentMode.HTML);
+			userLabel.setPrimaryStyleName(ValoTheme.MENU_SUBTITLE);
+			userLabel.addStyleName(ValoTheme.LABEL_H4);
+			userLabel.setSizeUndefined();
+		}
+		return userLabel;
 	}
 }

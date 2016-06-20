@@ -2,6 +2,7 @@ package at.jku.se.grip.ui.drawboard;
 
 import org.vaadin.hezamu.canvas.Canvas;
 
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -14,6 +15,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import at.jku.se.grip.enums.FloorType;
+
 @SuppressWarnings("serial")
 public class DrawboardView extends CustomComponent {
 
@@ -24,6 +27,7 @@ public class DrawboardView extends CustomComponent {
 	private FormLayout selectMenuFormLayout = null;
 	private ComboBox selectPathComboBox = null;
 	private ComboBox selectRobotComboBox = null;
+	private ComboBox floorTypeComboBox = null;
 	private HorizontalLayout selectDeleteButtons = null;
 	private Button selectButton = null;
 	private Button deleteButton = null;
@@ -124,6 +128,7 @@ public class DrawboardView extends CustomComponent {
 			selectMenuFormLayout.addComponent(getSelectDeleteButtons());
 			selectMenuFormLayout.addComponent(getPathName());
 			selectMenuFormLayout.addComponent(getSaveCancelButtons());
+			selectMenuFormLayout.addComponent(getFloorTypeComboBox());
 			selectMenuFormLayout.addComponent(getSelectRobotComboBox());
 			selectMenuFormLayout.addComponent(getExecuteButton());
 		}
@@ -148,6 +153,17 @@ public class DrawboardView extends CustomComponent {
 			selectRobotComboBox.setInputPrompt("Execute on");
 		}
 		return selectRobotComboBox;
+	}
+	
+	public ComboBox getFloorTypeComboBox() {
+		if(floorTypeComboBox == null) {
+			floorTypeComboBox = new ComboBox();
+			floorTypeComboBox.addStyleName("vertical");
+			floorTypeComboBox.setInputPrompt("Floor type");
+			floorTypeComboBox.setContainerDataSource(new BeanItemContainer<>(
+                FloorType.class, FloorType.valuesAsList()));
+		}
+		return floorTypeComboBox;
 	}
 	
 	private HorizontalLayout getSelectDeleteButtons() {
@@ -189,7 +205,7 @@ public class DrawboardView extends CustomComponent {
 	public Button getSelectButton() {
 		if (selectButton == null) {
 			selectButton = new Button("Select");
-			selectButton.setIcon(FontAwesome.CROSSHAIRS);
+			selectButton.setIcon(FontAwesome.CHECK);
 		}
 		return selectButton;
 	}

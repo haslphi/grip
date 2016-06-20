@@ -1,7 +1,5 @@
 package at.jku.se.grip.ui.overview;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 import org.dussan.vaadin.dcharts.DCharts;
@@ -24,19 +22,31 @@ import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.series.BarRenderer;
 
 import com.google.common.collect.Lists;
-import com.vaadin.server.ClientConnector.AttachEvent;
-import com.vaadin.server.StreamResource.StreamSource;
+import com.google.common.eventbus.Subscribe;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.renderers.ClickableRenderer.RendererClickEvent;
+import com.vaadin.ui.renderers.ImageRenderer;
 
+import at.jku.se.grip.GripUI;
 import at.jku.se.grip.beans.Drawing;
+import at.jku.se.grip.beans.Drawing.DrawingPersistenceEvent;
+import at.jku.se.grip.beans.Note;
 import at.jku.se.grip.common.CriteriaFactory;
 import at.jku.se.grip.dao.DaoServiceRegistry;
+import at.jku.se.grip.ui.events.OpenDrawingEvent;
 import lombok.val;
 
 public class OverviewController {
 	
 	private OverviewView view = null;
 	DCharts chart = null;
+	private Note userNote = null;
 	
 	public OverviewController(){
 		view = new OverviewView();
@@ -44,29 +54,96 @@ public class OverviewController {
 	}
 	
 	private void init() {
-		Component c = createChartSlot();
-		c.addAttachListener(this::attachListener);
+		// get the user notes
+		userNote = DaoServiceRegistry.getNoteDAO().findByUserId(GripUI.getUser().getId().getId());
+		if(userNote != null && userNote.getNotes() != null) {
+			view.getNotesTextArea().setValue(userNote.getNotes());
+		}
 		
-		view.getDashboardPanelsCssLayout().addComponent(createChartSlot());
+		// configure notes save menu item
+		if(view.getNoteComponent().getTools() != null) {
+			// add listener to save item
+			view.getNoteComponent().getTools().getItems().get(1).setCommand(this::notesSaveSelectedListener);
+		}
+		
+		// fill drawing grid and add listeners
+		refreshDrawingGrid();
+    	ImageRenderer renderer = (ImageRenderer) view.getDrawingGrid().getColumn("icon").getRenderer();
+    	renderer.addClickListener(this::drawingIconClickEvent);
+    	view.getDrawingGrid().addItemClickListener(this::drawingItemClickListener);
+		
+		// create the chart component and fill it with data
+		Component c = createChartSlot();
+		refreshDrawingChart();
+		
+		view.getDashboardPanelsCssLayout().addComponent(c);
+		view.getDashboardPanelsCssLayout().addComponent(view.getDrawingComponent());
+		
+		// register to the eventbus
+		GripUI.getEventBus().register(this);
 	}
 	
-	private void attachListener(AttachEvent e) {
-		chart.replot(true, true);
+	private void notesSaveSelectedListener(MenuItem selectedItem) {
+		saveNote();
+		Notification notif = new Notification("Save done");
+		notif.setPosition(Position.TOP_CENTER);
+		notif.show(Page.getCurrent());
+	}
+	
+	private void drawingItemClickListener(ItemClickEvent event) {
+		if(event.isDoubleClick() && event.getItemId() != null) {
+			GripUI.getEventBus().post(new OpenDrawingEvent((Drawing) event.getItemId()));
+		}
+	}
+	
+	private void drawingIconClickEvent(RendererClickEvent event) {
+		Drawing bean = (Drawing)event.getItemId();
+		if(bean != null && !bean.isNew()) {
+			GripUI.getEventBus().post(new OpenDrawingEvent(bean));
+		}
+	}
+	
+	/**
+	 * Listen to {@link DrawingPersistenceEvent}s of {@link Drawing} beans.
+	 * 
+	 * @param event
+	 */
+	@Subscribe
+	public void listenDrawingPersistenceAction(DrawingPersistenceEvent event) {
+		refreshDrawingGrid();
+		refreshDrawingChart();
 	}
 	
 	public OverviewView getView(){
 		return view;
 	}
 	
-//	public saveNote() {
-//		
-//	}
+	/**
+	 * Save the user notes.
+	 */
+	public void saveNote() {
+		userNote.setNotes(view.getNotesTextArea().getValue());
+		DaoServiceRegistry.getNoteDAO().save(userNote);
+	}
 	
-	private Component createChartSlot() {
+	/**
+	 * Refresh the data in the drawing grid.
+	 */
+	private void refreshDrawingGrid() {
+		List<Drawing> beans = DaoServiceRegistry.getDrawingDAO().findByCriteria(CriteriaFactory.create().ascOrder("name"));
+    	view.getDrawingGrid().setContainerDataSource(new BeanItemContainer<>(
+                Drawing.class, beans));
+	}
+	
+	/**
+	 * Refresh the data for the chart.
+	 */
+	private void refreshDrawingChart() {
 		List<Drawing> beans = DaoServiceRegistry.getDrawingDAO().findByCriteria(
 				CriteriaFactory.create()
 				.descOrder("header.modifiedDate")
 				.descOrder("header.createdDate"));
+
 		DataSeries dataSeries = new DataSeries();
 		Series series = new Series();
 
@@ -85,17 +162,17 @@ public class OverviewController {
 		}
 		
 		SeriesDefaults seriesDefaults = new SeriesDefaults()
-			.setRenderer(SeriesRenderers.BAR)
-			.setLineWidth(2)
-			.setPointLabels(
-				new PointLabels()
-					.setShow(true)
-					.setLocation(PointLabelLocations.EAST)
-					.setEdgeTolerance(-15))
-			.setShadowAngle(135)
-			.setRendererOptions(
-				new BarRenderer()
-					.setBarDirection(BarDirections.HOTIZONTAL));
+				.setRenderer(SeriesRenderers.BAR)
+				.setLineWidth(2)
+				.setPointLabels(
+						new PointLabels()
+						.setShow(true)
+						.setLocation(PointLabelLocations.EAST)
+						.setEdgeTolerance(-15))
+				.setShadowAngle(135)
+				.setRendererOptions(
+						new BarRenderer()
+						.setBarDirection(BarDirections.HOTIZONTAL));
 		
 		Legend legend = new Legend()
 				.setShow(true)
@@ -103,145 +180,36 @@ public class OverviewController {
 				.setLocation(LegendLocations.EAST);
 
 		Axes axes = new Axes()
-			.addAxis(
-				new XYaxis(XYaxes.Y)
-					.setRenderer(AxisRenderers.CATEGORY));
+				.addAxis(
+						new XYaxis(XYaxes.Y)
+						.setRenderer(AxisRenderers.CATEGORY));
 
 		Options options = new Options()
-			.setSeriesDefaults(seriesDefaults)
-			.setSeries(series)
-			.setLegend(legend)
-			.setAxes(axes)
-			.setAnimate(true)
-			.setAnimateReplot(true);
-
-		chart = new DCharts()
-			.setDataSeries(dataSeries)
+				.setSeriesDefaults(seriesDefaults)
+				.setSeries(series)
+				.setLegend(legend)
+				.setAxes(axes)
+				.setAnimate(true)
+				.setAnimateReplot(true);
+		
+		chart.setDataSeries(dataSeries)
 			.setOptions(options)
+			.show();
+	}
+	
+	/**
+	 * Create the slot component with the included {@link Drawing} chart.
+	 * 
+	 * @return the created component
+	 */
+	private Component createChartSlot() {
+		chart = new DCharts()
 			.show();
 		chart.setWidth("600px");
 		chart.setHeight("300px");
 		chart.setCaption("Last Path Lengths");
 
 		return view.createContentWrapper(chart);
-	}
-	
-	private void init2(){
-		/*DataSeries dataSeries = new DataSeries()
-				.add(2, 6, 7, 10);
-
-		SeriesDefaults seriesDefaults = new SeriesDefaults()
-				.setRenderer(SeriesRenderers.BAR)
-				.setRendererOptions(
-						new BarRenderer()
-							.setBarDirection(BarDirections.HOTIZONTAL));
-
-		Axes axes = new Axes()
-				.addAxis(
-						new XYaxis()
-						.setRenderer(AxisRenderers.CATEGORY)
-						.setTicks(
-								new Ticks()
-								.add("10.06.", "09.06", "08.06", "30.05.")));
-
-		Highlighter highlighter = new Highlighter()
-				.setShow(false);
-
-		Options options = new Options()
-				.setSeriesDefaults(seriesDefaults)
-				.setAxes(axes)
-				.setHighlighter(highlighter);
-
-		DCharts chart = new DCharts()
-				.setDataSeries(dataSeries)
-				.setOptions(options)
-				.show();
-		getView().getCanvasLayout().addComponent(chart);
-		*/
-		
-		// generate test chart
-		/*DataSeries dataSeries = new DataSeries();
-		dataSeries.newSeries()
-			.add(2, 1)
-			.add(4, 2)
-			.add(6, 3)
-			.add(3, 4);
-		dataSeries.newSeries()
-			.add(5, 1)
-			.add(1, 2)
-			.add(3, 3)
-			.add(4, 4);
-		dataSeries.newSeries()
-			.add(4, 1)
-			.add(7, 2)
-			.add(1, 3)
-			.add(2, 4);
-			*/
-
-		DataSeries dataSeries = new DataSeries();
-		dataSeries.newSeries()
-//			.add(2, 1)
-//			.add(4, 2)
-//			.add(6, "09.06")
-			.add(3, "10.06");
-		dataSeries.newSeries()
-//			.add(5, 1)
-//			.add(1, 2)
-//			.add(3, "09.06")
-			.add(4, "11.06");
-		dataSeries.newSeries()
-//			.add(4, 1)
-//			.add(7, 2)
-//			.add(1, "09.06")
-			.add(2, "12.06");
-		
-		SeriesDefaults seriesDefaults = new SeriesDefaults()
-			.setRenderer(SeriesRenderers.BAR)
-			.setPointLabels(
-				new PointLabels()
-					.setShow(true)
-					.setLocation(PointLabelLocations.EAST)
-					.setEdgeTolerance(-15))
-			.setShadowAngle(135)
-			.setRendererOptions(
-				new BarRenderer()
-					.setBarDirection(BarDirections.HOTIZONTAL));
-
-		Axes axes = new Axes()
-			.addAxis(
-				new XYaxis(XYaxes.Y)
-					.setRenderer(AxisRenderers.CATEGORY));
-
-		Options options = new Options()
-			.setSeriesDefaults(seriesDefaults)
-			.setAxes(axes);
-
-		DCharts chart = new DCharts()
-			.setDataSeries(dataSeries)
-			.setOptions(options)
-			.show();
-		view.getDashboardPanelsCssLayout().addComponent(view.createContentWrapper(chart));
-//		getView().getCanvasLayout().addComponent(chart);
-		
-		/*------------------------------------*/
-		
-//		BrowserFrame frame = new BrowserFrame();
-//		frame.setWidth("1000px");
-//		frame.setHeight("600px");
-		//frame.setSource(new StreamResource(new ChartStreamSource(), "chart"));
-		//getView().getCanvasLayout().addComponent(frame);
-
-	}
-	
-	private static class ChartStreamSource implements StreamSource {
-
-		//private static final byte[] HTML = "<html><head><script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script><script type=\"text/javascript\">google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});google.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([['Age', 'Weight'],[ 8,      12],[ 4,      5.5],[ 11,     14],[ 4,      5],[ 3,      3.5],[ 6.5,    7]]);var options = {title: 'Age vs. Weight comparison',hAxis: {title: 'Age', minValue: 0, maxValue: 15},vAxis: {title: 'Weight', minValue: 0, maxValue: 15},legend: 'none'};var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));chart.draw(data, options);}</script></head><body><div id=\"chart_div\" style=\"width: 200px; height: 200px;\"></div></body></html>".getBytes();
-		private static final byte[] HTML = "<html><head><script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script><script type=\"text/javascript\">google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});google.setOnLoadCallback(drawChart);function drawChart() {var data = google.visualization.arrayToDataTable([['Age', 'Weight'],[ 8,      12],[ 4,      5.5],[ 11,     14],[ 4,      5],[ 3,      3.5],[ 6.5,    7]]);var options = {title: 'Age vs. Weight comparison', width: 300, height: 300, hAxis: {title: 'Age', minValue: 0, maxValue: 15},vAxis: {title: 'Weight', minValue: 0, maxValue: 15},legend: 'none'};var chart = new google.visualization.ScatterChart(document.getElementById('chartFrame'));chart.draw(data, options);}</script></head></html>".getBytes();
-
-		public InputStream getStream() {
-			return new ByteArrayInputStream(HTML);
-		}
-
 	}
 	
 }

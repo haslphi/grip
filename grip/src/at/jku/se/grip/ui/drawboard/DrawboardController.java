@@ -30,6 +30,7 @@ import at.jku.se.grip.beans.Robot.RobotPersistenceEvent;
 import at.jku.se.grip.common.CriteriaFactory;
 import at.jku.se.grip.common.NotificationPusher;
 import at.jku.se.grip.dao.DaoServiceRegistry;
+import at.jku.se.grip.enums.FloorType;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
@@ -43,13 +44,16 @@ public class DrawboardController {
 	private List<MousePosition> path = new ArrayList<>();
 	private Drawing selected = null;
 
-	public DrawboardController() {
+	public DrawboardController(Drawing initialDrawing) {
 		view = new DrawboardView();
+		selected = initialDrawing;
 		init();
 	}
 	
 	private void init() {
 		canvas = view.getCanvas();
+		
+		// add Listener
 		canvas.addMouseUpListener(this::canvasMouseUpListener);
 		canvas.addMouseMoveListener(this::canvasMouseMoveListener);
 		canvas.addAttachListener(this::canvasAttachListener);
@@ -60,10 +64,18 @@ public class DrawboardController {
 		view.getDeleteButton().addClickListener(this::deleteListener);
 		view.getExecuteButton().addClickListener(this::executeListener);
 		
+		// fill ComboBoxes
 		refreshPaths(false);
 		refreshRobots(false);
 		
+		// register to the eventbus
 		GripUI.getEventBus().register(this);
+		
+		// set initial drawing
+		if(selected != null && !selected.isNew()) {
+			view.getSelectPathComboBox().setValue(selected);
+			selectDrawing();
+		}
 	}
 	
 	public DrawboardView getView() {
@@ -82,7 +94,7 @@ public class DrawboardController {
 	 */
 	private void refreshPaths(boolean keepSelected, Drawing select) {
 		Object selected = view.getSelectRobotComboBox().getValue();
-		List<Drawing> beans = DaoServiceRegistry.getDrawingDAO().findByCriteria(CriteriaFactory.create());
+		List<Drawing> beans = DaoServiceRegistry.getDrawingDAO().findByCriteria(CriteriaFactory.create().ascOrder("name"));
     	view.getSelectPathComboBox().setContainerDataSource(new BeanItemContainer<>(
                 Drawing.class, beans));
     	if(beans.contains(select)) {
@@ -116,16 +128,7 @@ public class DrawboardController {
 	}
 	
 	private void selectListener(ClickEvent e) {
-		selected = (Drawing) view.getSelectPathComboBox().getValue();
-		if(selected != null && !selected.isNew()) {
-			view.getSelectPathComboBox().setEnabled(false);
-			view.getSelectButton().setEnabled(false);
-			view.getDeleteButton().setEnabled(false);
-			view.getSaveButton().setEnabled(false);
-			view.getPathName().setEnabled(false);
-			
-			drawPath(path = jsonPathToPathList(selected.getJsonPath()));
-		}
+		selectDrawing();
 	}
 	
 	private void clearListener(ClickEvent e) {
@@ -149,49 +152,53 @@ public class DrawboardController {
 		refreshPaths(false);
 	}
 	
-	
 	private void executeListener(Button.ClickEvent e) {
 		Robot robot = (Robot) view.getSelectRobotComboBox().getValue();
-		if(robot != null && !robot.isNew()) {
-			Socket clientSocket = null;
-			try {
-//				String urlPath = "GET /setJson?json=";
-//				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
-				String json = pathListToJsonDirections(false).toJSONString();
-				clientSocket = new Socket(robot.getHost(), robot.getPort() == null ? 80 : robot.getPort());
-				DataOutputStream outToServer = new DataOutputStream(
-						clientSocket.getOutputStream());
-				//BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				outToServer.writeBytes(json);
-//				outToServer.writeBytes(urlPath + json);
-//				String response = "";
-//				while (!response.contains(".")) {
-//					response = reader.readLine();
-//					System.out.println(response);
-//				}
-//				reader.close();
-//				System.out.println(response);
-				
-//				response = reader.readLine();
-//				System.out.println(response);
-				//outToServer.writeBytes(pathListToJsonDirections(false).toJSONString());
+		FloorType type = (FloorType) view.getFloorTypeComboBox().getValue();
+		
+		// check if path is not empty
+		if(path == null || path.size() <= 0) {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Draw or select a path first.", "Path missing!", 2000);
+			return;
+		}
+		// check if robot is selected
+		if(robot == null || robot.isNew()) {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a robot first.", "Robot missing!", 2000);
+			return;
+		}
+		// check if floor type is not empty
+		if(type == null) {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a floor type first.", "Floor type missing!", 2000);
+			return;
+		}
+		
+		//Socket clientSocket = null;
+		try (Socket clientSocket = new Socket(robot.getHost(), robot.getPort() == null ? 80 : robot.getPort())) {
+			//				String urlPath = "GET /setJson?json=";
+			//				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
+			String json = pathListToJsonDirections(false).toJSONString();
+			DataOutputStream outToServer = new DataOutputStream(
+					clientSocket.getOutputStream());
+			//BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			outToServer.writeBytes(json);
+			//				outToServer.writeBytes(urlPath + json);
+			//				String response = "";
+			//				while (!response.contains(".")) {
+			//					response = reader.readLine();
+			//					System.out.println(response);
+			//				}
+			//				reader.close();
+			//				System.out.println(response);
 
-				System.out.println(pathListToJsonDirections(false));
-			} catch (IOException ex) {
-				System.out.println("IOException occured!");
-			} catch (Exception ex) {
-				System.out.println("Server Connection failed!");
-			} finally {
-				if(clientSocket != null) {
-					try {
-						clientSocket.close();
-					} catch (IOException e1) {
-						//ignore
-					}
-				}
-			}
-		} else {
-			NotificationPusher.showCustomError(Page.getCurrent(), "Select a robot first.", "Robot missing!", 2000);
+			//				response = reader.readLine();
+			//				System.out.println(response);
+			//outToServer.writeBytes(pathListToJsonDirections(false).toJSONString());
+
+			System.out.println(pathListToJsonDirections(false));
+		} catch (IOException ex) {
+			System.out.println("IOException occured!");
+		} catch (Exception ex) {
+			System.out.println("Server Connection failed!");
 		}
 	}
 	
@@ -221,6 +228,33 @@ public class DrawboardController {
 	 */
 	private void canvasAttachListener(AttachEvent e) {
 		drawPath(path);
+	}
+	
+	/**
+	 * Select the current (in the ComboBox) chosen drawing and set it to the canvas.
+	 */
+	private void selectDrawing() {
+		selected = (Drawing) view.getSelectPathComboBox().getValue();
+		if(selected != null && !selected.isNew()) {
+			view.getSelectPathComboBox().setEnabled(false);
+			view.getSelectButton().setEnabled(false);
+			view.getDeleteButton().setEnabled(false);
+			view.getSaveButton().setEnabled(false);
+			view.getPathName().setEnabled(false);
+			
+			drawPath(path = jsonPathToPathList(selected.getJsonPath()));
+		}
+	}
+	
+	/**
+	 * Set the Drawing as the chosen one in the ComboBox and the Canvas.
+	 */
+	public void setDrawing(Drawing bean) {
+		if(bean != null && !bean.isNew()) {
+			selected = bean;
+			view.getSelectPathComboBox().setValue(selected);
+			selectDrawing();
+		}
 	}
 	
 	/**

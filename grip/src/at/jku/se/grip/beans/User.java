@@ -10,6 +10,7 @@ import javax.persistence.UniqueConstraint;
 
 import at.jku.se.grip.common.Constants;
 import at.jku.se.grip.common.UpdateType;
+import at.jku.se.grip.dao.DaoServiceRegistry;
 import at.jku.se.grip.security.CryptoService;
 import at.jku.se.grip.ui.events.IBeanCUDEvent;
 import lombok.AllArgsConstructor;
@@ -73,6 +74,14 @@ public class User extends HistorizableEntity {
 			e.printStackTrace();
 		}
 		super.preUpdate();
+	}
+	
+	@Override
+	public void postCreate() {
+		Note note = new Note();
+		note.setNoteUser(this);
+		DaoServiceRegistry.getNoteDAO().save(note);
+		super.postCreate();
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package at.jku.se.grip.dao;
 import java.util.UUID;
 
 import at.jku.se.grip.dao.impl.DrawingDAO;
+import at.jku.se.grip.dao.impl.NoteDAO;
 import at.jku.se.grip.dao.impl.RobotDAO;
 import at.jku.se.grip.dao.impl.UserDAO;
 
@@ -10,6 +11,7 @@ public class DaoServiceRegistry {
 	private static IUserDAO userDAO;
 	private static IRobotDAO robotDAO;
 	private static IDrawingDAO drawinDAO;
+	private static INoteDAO noteDAO;
 	
 	/**
 	 * Generate a uuid for the (composite) pk
@@ -51,5 +53,16 @@ public class DaoServiceRegistry {
 		}
 
 		return drawinDAO;
+	}
+	
+	/**
+	 * @return instance of the {@link INoteDAO}
+	 */
+	public static INoteDAO getNoteDAO(){
+		if(noteDAO == null) {
+			noteDAO = new NoteDAO();
+		}
+
+		return noteDAO;
 	}
 }

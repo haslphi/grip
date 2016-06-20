@@ -66,6 +66,7 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 				bean.preCreate();
 				getEM().persist(bean);
 				getEM().flush();	// flush the session, so the newly saved instance is known in the database within the session
+				bean.postCreate();
 				commitTransaction();
 			} else {
 				updateType = UpdateType.UPDATE;

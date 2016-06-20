@@ -113,6 +113,7 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 				bean.preCreate();
 				getEM().persist(bean);
 				getEM().flush();
+				bean.postCreate();
 			} else if (UpdateType.UPDATE.equals(type)) {
 				T savedBean = getEM().merge(bean);
 				getEM().flush();

@@ -53,6 +53,12 @@ public abstract class GenericEntity<ID extends GenericPK> implements Serializabl
 	}
 	
 	/**
+	 * Override to do some things directly after adding bean.
+	 */
+	public void postCreate() {
+	}
+	
+	/**
 	 * Create a CUD Event of a certain type.
 	 * Override and return a non null bean if you want the send an event over the EventBus.
 	 * 
