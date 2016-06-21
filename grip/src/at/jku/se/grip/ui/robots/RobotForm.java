@@ -21,6 +21,7 @@ public class RobotForm extends CustomComponent {
     private Button saveButton = null;
     private Button cancelButton = null;
     private Button testConnectionButton = null;
+    private Button historyButton = null;
     private TextField name = null;
     private TextField host = null;
     private TextField port = null;
@@ -54,6 +55,7 @@ public class RobotForm extends CustomComponent {
 			actions.addComponent(getHost());
 			actions.addComponent(getPort());
 			actions.addComponent(getRobotDescription());
+			actions.addComponent(new HorizontalLayout(getHistoryButton(), getTestConnectionButton()));
 		}
 		return actions;
 	}
@@ -64,7 +66,6 @@ public class RobotForm extends CustomComponent {
 			buttonHorizontalLayout.setSpacing(true);
 			buttonHorizontalLayout.addComponent(getSaveButton());
 			buttonHorizontalLayout.addComponent(getCancelButton());
-			buttonHorizontalLayout.addComponent(getTestConnectionButton());
 		}
 		return buttonHorizontalLayout;
 	}
@@ -91,8 +92,18 @@ public class RobotForm extends CustomComponent {
 		if(testConnectionButton == null) {
 			testConnectionButton = new Button("Test Connection");
 			testConnectionButton.setIcon(FontAwesome.EXCHANGE);
+			testConnectionButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 		}
 		return testConnectionButton;
+	}
+	
+	public Button getHistoryButton() {
+		if(historyButton == null) {
+			historyButton = new Button("History");
+			historyButton.setIcon(FontAwesome.HISTORY);
+			historyButton.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+		}
+		return historyButton;
 	}
 	
 	public TextField getName(){
@@ -131,7 +142,8 @@ public class RobotForm extends CustomComponent {
 			description = new TextArea("Description");
 			description.setIcon(FontAwesome.FILE_TEXT);
 			description.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-			description.setSizeFull();
+			description.setHeight("100%");
+			description.setWidth("100%");
 			description.setNullRepresentation("");
 			description.addValidator(ValidatorFactory.createStringLenghtValidator(description.getCaption(), 0, 4000, true));
 		}

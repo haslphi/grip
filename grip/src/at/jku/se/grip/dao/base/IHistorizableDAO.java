@@ -13,6 +13,7 @@ public interface IHistorizableDAO<H extends HistorizableEntity> extends IGeneric
 	
 	@Override
 	List<H> findByCriteria(CriteriaFactory factory);
+	List<H> findByCriteriaWithHistory(CriteriaFactory factory);
 	
 	@Override
 	H save(H bean);

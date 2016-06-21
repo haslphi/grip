@@ -30,6 +30,7 @@ $blue: #3bbfce;
 
 @import "../valo/valo.scss";
 @import "views/dashboardview";
+@import "views/drawboard";
 
 // Optimize the CSS output
 $v-included-components: remove($v-included-components, accordion);
@@ -52,6 +53,7 @@ $valo-menu-background-color: #414B56;
 @mixin grip {
   @include valo;
   @include grip-dashboard-view;
+  @include grip-drawboard-view;
 
   // Insert your own theme rules here
 }

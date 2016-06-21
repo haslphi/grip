@@ -1,5 +1,8 @@
 package at.jku.se.grip.ui.drawboard;
 
+import static at.jku.se.grip.common.Constants.CANVAS_HEIGHT;
+import static at.jku.se.grip.common.Constants.CANVAS_WIDTH;
+
 import org.vaadin.hezamu.canvas.Canvas;
 
 import com.vaadin.data.util.BeanItemContainer;
@@ -7,8 +10,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -18,13 +19,13 @@ import com.vaadin.ui.themes.ValoTheme;
 import at.jku.se.grip.enums.FloorType;
 
 @SuppressWarnings("serial")
-public class DrawboardView extends CustomComponent {
+public class DrawboardView extends VerticalLayout {
 
 	private HorizontalLayout mainLayout = null;
 	private VerticalLayout drawLayout = null;
-	private HorizontalLayout canvasLayout = null;
+	private VerticalLayout canvasLayout = null;
 	private Label headerLabel = null;
-	private FormLayout selectMenuFormLayout = null;
+	private VerticalLayout selectMenuFormLayout = null;
 	private ComboBox selectPathComboBox = null;
 	private ComboBox selectRobotComboBox = null;
 	private ComboBox floorTypeComboBox = null;
@@ -37,7 +38,6 @@ public class DrawboardView extends CustomComponent {
 	private Button clearButton = null;
 	private Button executeButton = null;
 	private Canvas canvas = null;
-	private VerticalLayout rootVerticalLayout = null;
 	private HorizontalLayout headerHorizontalLayout = null;
 
 	public DrawboardView() {
@@ -46,23 +46,15 @@ public class DrawboardView extends CustomComponent {
 	}
 
 	private void init() {
-		this.setCompositionRoot(getRootVerticalLayout());
+		this.setSizeFull();
+		this.setMargin(true);
+		this.addStyleName("drawboard");
+		this.addComponent(getHeaderHorizontalLayout());
+		this.addComponent(getMainLayout());
+		this.setExpandRatio(getMainLayout(), 1f);
 		this.setSizeFull();
 	}
 
-	public VerticalLayout getRootVerticalLayout() {
-		if(rootVerticalLayout == null) {
-			rootVerticalLayout = new VerticalLayout();
-			rootVerticalLayout.setSizeFull();
-			rootVerticalLayout.setMargin(true);
-			rootVerticalLayout.addStyleName("dashboard-view");
-			rootVerticalLayout.addComponent(getHeaderHorizontalLayout());
-			rootVerticalLayout.addComponent(getMainLayout());
-			rootVerticalLayout.setExpandRatio(getMainLayout(), 1f);
-		}
-		return rootVerticalLayout;
-	}
-	
 	public HorizontalLayout getHeaderHorizontalLayout() {
 		if(headerHorizontalLayout == null) {
 			headerHorizontalLayout = new HorizontalLayout();
@@ -102,27 +94,33 @@ public class DrawboardView extends CustomComponent {
 		if (drawLayout == null) {
 			drawLayout = new VerticalLayout();
 			drawLayout.setSizeFull();
+			Label size = new Label("200cm x 150cm");
+			size.setWidth("100%");
+			size.addStyleName(ValoTheme.LABEL_BOLD);
+			drawLayout.addComponent(size);
 			drawLayout.addComponent(getCanvasLayout());
+			drawLayout.setComponentAlignment(size, Alignment.TOP_CENTER);
 			drawLayout.setExpandRatio(getCanvasLayout(), 1);
 		}
 		return drawLayout;
 	}
 
-	public HorizontalLayout getCanvasLayout() {
+	public VerticalLayout getCanvasLayout() {
 		if (canvasLayout == null) {
-			canvasLayout = new HorizontalLayout();
-			canvasLayout.setWidth("880px");
-			canvasLayout.setHeight("620px");
+			canvasLayout = new VerticalLayout();
+			canvasLayout.setWidth(CANVAS_WIDTH + "px");
+			canvasLayout.setHeight(CANVAS_HEIGHT + "px");
 			canvasLayout.addComponent(getCanvas());
 			canvasLayout.addStyleName("card");
 		}
 		return canvasLayout;
 	}
 
-	public FormLayout getSelectMenu() {
+	public VerticalLayout getSelectMenu() {
 		if (selectMenuFormLayout == null) {
-			selectMenuFormLayout = new FormLayout();
-			selectMenuFormLayout.setMargin(true);
+			selectMenuFormLayout = new VerticalLayout();
+			selectMenuFormLayout.setMargin(false);
+			selectMenuFormLayout.setSpacing(true);
 
 			selectMenuFormLayout.addComponent(getSelectPathComboBox());
 			selectMenuFormLayout.addComponent(getSelectDeleteButtons());

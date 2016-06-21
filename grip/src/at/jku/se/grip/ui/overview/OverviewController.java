@@ -153,7 +153,7 @@ public class OverviewController {
 		i = 0;
 		for(val bean : beans) {
 			if(i < 10) {
-				dataSeries.newSeries().add(bean.getPathLength()/100, "");
+				dataSeries.newSeries().add((((double)bean.getPathLength())/100d), "");
 				series.addSeries((new XYseries().setLabel(bean.getName())));
 			} else {
 				break;
@@ -168,7 +168,8 @@ public class OverviewController {
 						new PointLabels()
 						.setShow(true)
 						.setLocation(PointLabelLocations.EAST)
-						.setEdgeTolerance(-15))
+						.setEdgeTolerance(-15)
+						.setFormatString("%.2fm"))
 				.setShadowAngle(135)
 				.setRendererOptions(
 						new BarRenderer()
@@ -205,9 +206,9 @@ public class OverviewController {
 	private Component createChartSlot() {
 		chart = new DCharts()
 			.show();
-		chart.setWidth("600px");
-		chart.setHeight("300px");
-		chart.setCaption("Last Path Lengths");
+		chart.setWidth("470px");
+		chart.setHeight("280px");
+		chart.setCaption("Path Lengths");
 
 		return view.createContentWrapper(chart);
 	}

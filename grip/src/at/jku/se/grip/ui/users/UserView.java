@@ -8,6 +8,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import at.jku.se.grip.beans.User;
 
@@ -109,6 +110,7 @@ public class UserView extends CustomComponent {
 		if(userList == null) {
 			userList = new Grid();
 			userList.setSizeFull();
+			userList.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
 			
 	        userList.setContainerDataSource(new BeanItemContainer<>(User.class));
 	        userList.removeAllColumns();

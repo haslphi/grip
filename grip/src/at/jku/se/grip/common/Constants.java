@@ -7,4 +7,6 @@ public class Constants {
 	public static final String DEFAULT_PERSISTENCE_IDENTIFIER = "grip";
 	public static final Long MAX_HISTORY = Long.MAX_VALUE;
 	public static final String VALO_BLUE = "#1772d7";
+	public static final int CANVAS_WIDTH = 800;
+	public static final int CANVAS_HEIGHT = 600;
 }

@@ -8,11 +8,11 @@
     <!-- <class>at.jku.se.grip.beans.Person</class>  -->
     
     <properties>
-		<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 		<property name="javax.persistence.jdbc.url"
-			value="jdbc:derby:C:/dev/derbyDatabases/gripDb;create=true" />
-		<property name="javax.persistence.jdbc.user" value="grip" />
-		<property name="javax.persistence.jdbc.password" value="grip" />
+			value="jdbc:mysql://localhost:3306/grip" />
+		<property name="javax.persistence.jdbc.user" value="sa" />
+		<property name="javax.persistence.jdbc.password" value="Cyol9NGOews3DRP;lQ%a" />
 	
 		<!-- EclipseLink should create the database schema automatically -->
 		<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />

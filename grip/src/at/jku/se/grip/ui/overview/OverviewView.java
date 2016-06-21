@@ -124,6 +124,7 @@ public class OverviewView extends Panel {
 		if(drawingGrid == null) {
 			drawingGrid = new Grid("Drawing Quickselect");
 			drawingGrid.setSizeFull();
+			drawingGrid.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
 			
 			drawingGrid.setContainerDataSource(new BeanItemContainer<>(Drawing.class));
 			drawingGrid.removeAllColumns();

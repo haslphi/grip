@@ -63,11 +63,28 @@ public class NotificationPusher {
 	 * @param caption own caption, if null or empty, the default caption {@value #DEFAULT_ERROR_CAPTION} will be used
 	 * @param delay the delay time for the notification, if null default ({@value #DEFAULT_CUSTOM_ERROR_DELAY}) will be used
 	 */
-	public static void showCustomWarning(Page current, String warning, String caption, Integer delay) {
+	public static void showCustomWarning(Page current, String warning, String caption, Integer delay, Position position) {
 		Notification notif = new Notification(StringUtils.isNotBlank(caption) ? caption: DEFAULT_ERROR_CAPTION,
 				warning,
 				Notification.Type.WARNING_MESSAGE);
-		notif.setPosition(Position.BOTTOM_CENTER);
+		notif.setPosition(position != null ? position : Position.BOTTOM_CENTER);
+		notif.setDelayMsec(delay != null ? delay : DEFAULT_CUSTOM_ERROR_DELAY);
+		notif.show(current);
+	}
+	
+	/**
+	 * Show a custom information.<br>
+	 * With dedicated caption if necessary.
+	 * 
+	 * @param context on which page to show the notification
+	 * @param warning the warning string
+	 * @param caption own caption, if null or empty, the default caption {@value #DEFAULT_ERROR_CAPTION} will be used
+	 * @param delay the delay time for the notification, if null default ({@value #DEFAULT_CUSTOM_ERROR_DELAY}) will be used
+	 */
+	public static void showCustomInformation(Page current, String caption, Integer delay, Position position) {
+		Notification notif = new Notification(StringUtils.isNotBlank(caption) ? caption: DEFAULT_ERROR_CAPTION,
+				Notification.Type.HUMANIZED_MESSAGE);
+		notif.setPosition(position != null ? position : Position.MIDDLE_CENTER);
 		notif.setDelayMsec(delay != null ? delay : DEFAULT_CUSTOM_ERROR_DELAY);
 		notif.show(current);
 	}

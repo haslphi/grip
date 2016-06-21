@@ -2,13 +2,16 @@ package at.jku.se.grip.ui.drawboard;
 
 
 
+import static at.jku.se.grip.common.Constants.CANVAS_HEIGHT;
 import static at.jku.se.grip.common.Constants.VALO_BLUE;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,9 +20,10 @@ import org.vaadin.hezamu.canvas.Canvas;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.server.Page;
 import com.vaadin.server.ClientConnector.AttachEvent;
+import com.vaadin.server.Page;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -28,7 +32,9 @@ import at.jku.se.grip.beans.Drawing;
 import at.jku.se.grip.beans.Robot;
 import at.jku.se.grip.beans.Robot.RobotPersistenceEvent;
 import at.jku.se.grip.common.CriteriaFactory;
+import at.jku.se.grip.common.LogUtilities;
 import at.jku.se.grip.common.NotificationPusher;
+import at.jku.se.grip.common.RobotUtilities;
 import at.jku.se.grip.dao.DaoServiceRegistry;
 import at.jku.se.grip.enums.FloorType;
 import lombok.AllArgsConstructor;
@@ -138,6 +144,7 @@ public class DrawboardController {
 		view.getDeleteButton().setEnabled(true);
 		view.getSaveButton().setEnabled(true);
 		view.getPathName().setEnabled(true);
+		view.getPathName().setValue("");
 		
 		path = new ArrayList<>();
 		
@@ -146,10 +153,15 @@ public class DrawboardController {
 	
 	private void deleteListener(ClickEvent e) {
 		Drawing value = (Drawing) view.getSelectPathComboBox().getValue();
+		
+		// check if path is chosen
 		if(value != null && !value.isNew()) {
 			DaoServiceRegistry.getDrawingDAO().delete(value);
+			refreshPaths(false);
+		} else {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "No path is chosen.", "Choose a path!", 2000, Position.TOP_CENTER);
+			return;
 		}
-		refreshPaths(false);
 	}
 	
 	private void executeListener(Button.ClickEvent e) {
@@ -158,17 +170,24 @@ public class DrawboardController {
 		
 		// check if path is not empty
 		if(path == null || path.size() <= 0) {
-			NotificationPusher.showCustomWarning(Page.getCurrent(), "Draw or select a path first.", "Path missing!", 2000);
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Draw or select a path first.", "Path missing!", 2000, Position.TOP_CENTER);
 			return;
 		}
 		// check if robot is selected
 		if(robot == null || robot.isNew()) {
-			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a robot first.", "Robot missing!", 2000);
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a robot first.", "Robot missing!", 2000, Position.TOP_CENTER);
 			return;
 		}
 		// check if floor type is not empty
 		if(type == null) {
-			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a floor type first.", "Floor type missing!", 2000);
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Select a floor type first.", "Floor type missing!", 2000, Position.TOP_CENTER);
+			return;
+		}
+		
+		// check connection
+		boolean connection = RobotUtilities.testConnection(robot);
+		if(!connection) {
+			NotificationPusher.showCustomError(Page.getCurrent(), "Connection failed!", "Robot can not be reached.", 3000);
 			return;
 		}
 		
@@ -177,6 +196,7 @@ public class DrawboardController {
 			//				String urlPath = "GET /setJson?json=";
 			//				String json = "{\"sequence\":[{\"left\":-0.5,\"right\":-0.5},{\"left\":0.5,\"right\":0.5}]}";
 			String json = pathListToJsonDirections(false).toJSONString();
+			LogUtilities.log().debug(json);
 			DataOutputStream outToServer = new DataOutputStream(
 					clientSocket.getOutputStream());
 			//BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -194,7 +214,6 @@ public class DrawboardController {
 			//				System.out.println(response);
 			//outToServer.writeBytes(pathListToJsonDirections(false).toJSONString());
 
-			System.out.println(pathListToJsonDirections(false));
 		} catch (IOException ex) {
 			System.out.println("IOException occured!");
 		} catch (Exception ex) {
@@ -208,6 +227,17 @@ public class DrawboardController {
 	 * @param e
 	 */
 	private void saveListener(Button.ClickEvent e) {
+		// path name must not be blank
+		if(StringUtils.isBlank(view.getPathName().getValue())) {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Insert a path name.", "Name is missing!", 2000, Position.TOP_CENTER);
+			return;
+		}
+		// check if path is not empty
+		if(path == null || path.size() <= 0) {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "Draw or select a path first.", "Path missing!", 2000, Position.TOP_CENTER);
+			return;
+		}
+		
 		if(selected == null) {
 			JSONObject directions = pathListToJsonDirections(true);
 			JSONObject jsonPath = pathListToJsonPath();
@@ -216,7 +246,18 @@ public class DrawboardController {
 						jsonPath.toJSONString(),
 						((Integer) directions.get("distance")).intValue());
 				drawing  = DaoServiceRegistry.getDrawingDAO().save(drawing);
-				System.out.print(jsonPath + "\n");
+
+				view.getSelectPathComboBox().setEnabled(true);
+				view.getSelectButton().setEnabled(true);
+				view.getDeleteButton().setEnabled(true);
+				view.getSaveButton().setEnabled(true);
+				view.getPathName().setEnabled(true);
+				view.getPathName().setValue("");
+				
+				// set drawing to combobox and select it
+				selected = drawing;
+				refreshPaths(false, selected);
+				selectDrawing();
 			}
 		}
 	}
@@ -235,6 +276,8 @@ public class DrawboardController {
 	 */
 	private void selectDrawing() {
 		selected = (Drawing) view.getSelectPathComboBox().getValue();
+		
+		// check if path is selected
 		if(selected != null && !selected.isNew()) {
 			view.getSelectPathComboBox().setEnabled(false);
 			view.getSelectButton().setEnabled(false);
@@ -243,6 +286,9 @@ public class DrawboardController {
 			view.getPathName().setEnabled(false);
 			
 			drawPath(path = jsonPathToPathList(selected.getJsonPath()));
+		} else {
+			NotificationPusher.showCustomWarning(Page.getCurrent(), "No path is chosen.", "Choose a path!", 2000, Position.TOP_CENTER);
+			return;
 		}
 	}
 	
@@ -366,9 +412,9 @@ public class DrawboardController {
 	@SuppressWarnings("unchecked")
 	private JSONObject pathListToJsonDirections(boolean calcDistanceOnly) {
 		double xOld = path.get(0).x;
-		double yOld = 660 - path.get(0).y;
+		double yOld = CANVAS_HEIGHT - path.get(0).y;
 		double xNew = path.get(0).x;
-		double yNew = 660 - path.get(0).y;
+		double yNew = CANVAS_HEIGHT - path.get(0).y;
 		double distance = 0;
 		double orientationOld = 0;
 		double orientationNew = 0;
@@ -382,7 +428,7 @@ public class DrawboardController {
 			xOld = xNew;
 			yOld = yNew;
 			xNew = path.get(i).x;
-			yNew = 660 - path.get(i).y;
+			yNew = CANVAS_HEIGHT - path.get(i).y;
 
 			// The difference between old orientation and new orientation is the
 			// turn to make
@@ -422,6 +468,7 @@ public class DrawboardController {
 			}
 		}
 		if(!calcDistanceOnly) {
+			jsonDirections.put("floorType", view.getFloorTypeComboBox().getValue().toString());
 			jsonDirections.put("directions", jsonArray);
 		} else {
 			jsonDirections.put("distance", distanceOnly);

@@ -8,6 +8,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import at.jku.se.grip.beans.Robot;
 
@@ -40,7 +41,7 @@ public class RobotView extends CustomComponent {
 			
 			mainLayout.addComponent(getLeft());
 			mainLayout.addComponent(getBeanForm());
-	        mainLayout.setExpandRatio(left, 2.5f);
+	        mainLayout.setExpandRatio(left, 2f);
 	        mainLayout.setExpandRatio(beanForm, 1);
 		}				
 		return mainLayout;
@@ -109,6 +110,7 @@ public class RobotView extends CustomComponent {
 		if(beanList == null) {
 			beanList = new Grid();
 			beanList.setSizeFull();
+			beanList.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
 			
 	        beanList.setContainerDataSource(new BeanItemContainer<>(Robot.class));
 	        beanList.removeAllColumns();

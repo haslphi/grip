@@ -43,6 +43,13 @@ public class Robot extends HistorizableEntity {
 	@Column(name = COLUMN_DESCRIPTION, length = 4000)
 	private String description;
 	
+	public void copyAttributesFlat(Robot bean) {
+		name = bean.getName();
+		host = bean.getHost();
+		port = bean.getPort();
+		description = bean.getDescription();
+	}
+	
 	@Override
 	public IBeanCUDEvent createEvent(UpdateType updateType) {
 		return new RobotPersistenceEvent(this, updateType);

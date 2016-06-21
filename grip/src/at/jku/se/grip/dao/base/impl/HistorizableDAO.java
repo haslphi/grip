@@ -42,6 +42,10 @@ public abstract class HistorizableDAO<H extends HistorizableEntity> extends Gene
 		factory.andIsNull("header.flaggedDeletedDate").andEquals("id.history", MAX_HISTORY);
 		return super.findByCriteria(factory);
 	}
+	
+	public List<H> findByCriteriaWithHistory(CriteriaFactory factory) {
+		return super.findByCriteria(factory);
+	}
 
 	/*@Override
 	public Integer countByCriteria(CriteriaFactory factory) {

@@ -6,6 +6,7 @@ import java.util.List;
 public enum FloorType {
 	
 	SOLID,
+	WOODEN,
 	JKU_CARPET;
 
 	public static List<FloorType> valuesAsList() {
