@@ -1,4 +1,6 @@
-package at.jku.se.grip.common;
+package at.jku.se.grip.enums;
+
+import at.jku.se.grip.common.CriteriaFactory;
 
 /**
  * Clause Types for the {@link CriteriaFactory}

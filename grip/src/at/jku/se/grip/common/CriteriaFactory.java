@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import at.jku.se.grip.beans.GenericEntity;
 import at.jku.se.grip.beans.GenericPK;
+import at.jku.se.grip.enums.CriteriaType;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.val;
