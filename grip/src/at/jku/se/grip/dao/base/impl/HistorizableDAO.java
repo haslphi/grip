@@ -13,8 +13,8 @@ import at.jku.se.grip.beans.GenericPK;
 import at.jku.se.grip.beans.HistorizableEntity;
 import at.jku.se.grip.beans.HistoryPK;
 import at.jku.se.grip.common.CriteriaFactory;
-import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.dao.base.IHistorizableDAO;
+import at.jku.se.grip.enums.UpdateType;
 
 public abstract class HistorizableDAO<H extends HistorizableEntity> extends GenericDAO<H> implements IHistorizableDAO<H> {
 

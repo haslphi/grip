@@ -2,7 +2,7 @@ package at.jku.se.grip.ui.events;
 
 import at.jku.se.grip.beans.GenericEntity;
 import at.jku.se.grip.beans.GenericPK;
-import at.jku.se.grip.common.UpdateType;
+import at.jku.se.grip.enums.UpdateType;
 
 /**
  * Create/Update/Delete Event for persistence Beans

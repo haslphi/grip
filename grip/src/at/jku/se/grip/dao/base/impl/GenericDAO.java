@@ -15,8 +15,8 @@ import at.jku.se.grip.GripUI;
 import at.jku.se.grip.beans.GenericEntity;
 import at.jku.se.grip.beans.GenericPK;
 import at.jku.se.grip.common.CriteriaFactory;
-import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.dao.base.IGenericDAO;
+import at.jku.se.grip.enums.UpdateType;
 import at.jku.se.grip.ui.events.IBeanCUDEvent;
 import lombok.NoArgsConstructor;
 

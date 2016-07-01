@@ -9,7 +9,7 @@ import javax.persistence.UniqueConstraint;
 
 import com.vaadin.server.ThemeResource;
 
-import at.jku.se.grip.common.UpdateType;
+import at.jku.se.grip.enums.UpdateType;
 import at.jku.se.grip.ui.events.IBeanCUDEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

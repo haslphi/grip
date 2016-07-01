@@ -1,4 +1,4 @@
-package at.jku.se.grip.common;
+package at.jku.se.grip.enums;
 
 public enum UpdateType {
 	ADD,

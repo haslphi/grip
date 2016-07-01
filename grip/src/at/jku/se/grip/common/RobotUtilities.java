@@ -21,7 +21,7 @@ public class RobotUtilities {
 	public static final int SOCKET_TIMOUT = 5000;
 	
 	/**
-	 * 
+	 * Test the connection to the robot. {@value #SOCKET_TIMOUT}ms are used as timeout for the connection test.
 	 * 
 	 * @param bean
 	 * @return true if connection was successful, else false

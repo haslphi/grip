@@ -9,8 +9,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import at.jku.se.grip.common.Constants;
-import at.jku.se.grip.common.UpdateType;
 import at.jku.se.grip.dao.DaoServiceRegistry;
+import at.jku.se.grip.enums.UpdateType;
 import at.jku.se.grip.security.CryptoService;
 import at.jku.se.grip.ui.events.IBeanCUDEvent;
 import lombok.AllArgsConstructor;
