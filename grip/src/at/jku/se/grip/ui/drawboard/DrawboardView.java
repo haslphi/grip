@@ -37,6 +37,7 @@ public class DrawboardView extends VerticalLayout {
 	private Button saveButton = null;
 	private Button clearButton = null;
 	private Button executeButton = null;
+	private Button stopButton = null;
 	private Canvas canvas = null;
 	private HorizontalLayout headerHorizontalLayout = null;
 
@@ -129,6 +130,7 @@ public class DrawboardView extends VerticalLayout {
 			selectMenuFormLayout.addComponent(getFloorTypeComboBox());
 			selectMenuFormLayout.addComponent(getSelectRobotComboBox());
 			selectMenuFormLayout.addComponent(getExecuteButton());
+			//selectMenuFormLayout.addComponent(getStopButton());
 		}
 		return selectMenuFormLayout;
 	}
@@ -230,6 +232,14 @@ public class DrawboardView extends VerticalLayout {
 			executeButton.setIcon(FontAwesome.PLAY);
 		}
 		return executeButton;
+	}
+	
+	public Button getStopButton() {
+		if(stopButton == null) {
+			stopButton = new Button("Stop");
+			stopButton.setIcon(FontAwesome.STOP);
+		}
+		return stopButton;
 	}
 
 	public Canvas getCanvas() {

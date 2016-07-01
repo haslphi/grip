@@ -5,9 +5,13 @@ package at.jku.se.grip.ui.drawboard;
 import static at.jku.se.grip.common.Constants.CANVAS_HEIGHT;
 import static at.jku.se.grip.common.Constants.VALO_BLUE;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +73,7 @@ public class DrawboardController {
 		view.getClearButton().addClickListener(this::clearListener);
 		view.getDeleteButton().addClickListener(this::deleteListener);
 		view.getExecuteButton().addClickListener(this::executeListener);
+		view.getStopButton().addClickListener(this::stopListener);
 		
 		// fill ComboBoxes
 		refreshPaths(false);
@@ -161,6 +166,37 @@ public class DrawboardController {
 		} else {
 			NotificationPusher.showCustomWarning(Page.getCurrent(), "No path is chosen.", "Choose a path!", 2000, Position.TOP_CENTER);
 			return;
+		}
+	}
+	
+	private void stopListener(Button.ClickEvent e) {
+		Robot bean = (Robot) view.getSelectRobotComboBox().getValue();
+		
+		boolean connected = false;
+
+		try (Socket clientSocket = new Socket()) {
+			String host = bean.getHost();
+			Integer port = bean.getPort();
+			clientSocket.connect(new InetSocketAddress(host, port == null ? 80 : port), 3000);
+			clientSocket.setSoTimeout(3000);
+
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			outToServer.writeBytes("STOP");
+			String response = reader.readLine();
+			//				while (!response.contains(".")) {
+			//					response = reader.readLine();
+			//					System.out.println(response);
+			//				}
+			reader.close();
+			connected = StringUtils.isNotBlank(response);
+			LogUtilities.log().debug("Socket Response: " + response);
+		} catch (SocketTimeoutException ex) {
+			System.out.println("Timeout exeption!");
+		} catch (IOException ex) {
+			System.out.println("IOException occured!");
+		} catch (Exception ex) {
+			System.out.println("Server Connection failed!");
 		}
 	}
 	
