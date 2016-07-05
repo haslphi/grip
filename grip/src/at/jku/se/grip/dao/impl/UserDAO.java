@@ -13,7 +13,10 @@ public class UserDAO extends HistorizableDAO<User> implements IUserDAO {
 	public Class<User> getType() {
 		return User.class;
 	}
-	
+
+	/**
+	 * Find a user by the given username and encrypted password
+	 */
 	@Override
 	public User findByUsernameAndPassword(String username, String encryptedPwd) {
 		CriteriaFactory factory = CriteriaFactory.create()

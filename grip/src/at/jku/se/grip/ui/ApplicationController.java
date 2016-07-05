@@ -47,6 +47,7 @@ public class ApplicationController {
 		view.getNavigatorView().getSignOutButton().addClickListener(this::signOut);
 	}
 	
+	/* LISTENERS */
 	private void overview (Button.ClickEvent event){
 		switchToOverview();
 	}
@@ -68,14 +69,19 @@ public class ApplicationController {
 		if(overviewController != null) {
 			overviewController.saveNote();
 		}
+		// send logout event on eventbus
 		GripUI.getEventBus().post(new LogoutEvent());
 	}
 	
+	// Subscribe to eventbus
 	@Subscribe
 	public void listenOpenDrawing(OpenDrawingEvent event) {
 		switchToDrawboard(event.getBean());
 	}
 	
+	/**
+	 * remove current component from view and start/switch to overview panel
+	 */
 	private void switchToOverview(){
 		if(overviewController == null){
 			overviewController = new OverviewController();			
@@ -88,6 +94,9 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
+	/**
+	 * remove current component from view and start/switch to drawboard panel
+	 */
 	private void switchToDrawboard(Drawing bean){
 		if(drawboardController == null){
 			drawboardController = new DrawboardController(bean);			
@@ -102,6 +111,9 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
+	/**
+	 * remove current component from view and start/switch to robots panel
+	 */
 	private void switchToRobots(){
 		if(robotController == null){
 			robotController = new RobotController();			
@@ -114,6 +126,9 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
+	/**
+	 * remove current component from view and start/switch to users panel
+	 */
 	private void switchToUsers(){
 		if(usersController == null){
 			usersController = new UserController();			
@@ -126,6 +141,11 @@ public class ApplicationController {
 		view.setExpandRatio(actComponent, 1.0f);
 	}
 	
+	/**
+	 * Getter for the panel view
+	 * 
+	 * @return
+	 */
 	public ApplicationView getView(){
 		return view;
 	}
