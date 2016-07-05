@@ -146,8 +146,6 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 		bean = getEM().merge(bean);
 		getEM().remove(bean);
 		
-		sendCUDEvent(bean, UpdateType.DELETE);
-		
 		return bean;
 	}
 	
@@ -160,7 +158,7 @@ public abstract class GenericDAO<T extends GenericEntity<? extends GenericPK>> e
 	protected void sendCUDEvent(T bean, UpdateType updateType) {
 		IBeanCUDEvent event = bean.createEvent(UpdateType.UPDATE);
 		if(event != null) {
-			GripUI.getEventBus().post(bean.createEvent(UpdateType.UPDATE));
+			GripUI.getEventBus().post(event);
 		}
 	}
 }

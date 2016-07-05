@@ -80,16 +80,22 @@ public class GripUI extends UI {
 
 	@Subscribe
 	public void listenLogin(LoginEvent event){
-		System.out.println("Login Event arrived: Login " + (event.isValidLogin() ? "accepted" : "declined."));
+		// Log Event
+		System.out.println("Login Event arrived: Login "
+				+ (event.isValidLogin() ? "accepted" : "declined."));
+		
 		if(event.isValidLogin()){
 			user = event.getUser();
+			// put User into current session
 			VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
+			// start the application
 			switchToApplication();			
 		}
 	}
 
 	@Subscribe
 	public void listenLogout(LogoutEvent event) {
+		// remove User from current session
 		VaadinSession.getCurrent().setAttribute(User.class.getName(), null);
 		switchToLogin();
 	}
